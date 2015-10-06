@@ -4,11 +4,14 @@
   function initialize(){
     console.log('working!');
     getUserLocation();
-    findFood();
   }
 
   function getUserLocation() {
     var startPos;
+    var geoOptions = {
+      timeout: 10 * 1000,
+      maximumAge: 1000 * 60 * 10 //5 minutes before grabbing new location
+    };
 
     var geoSuccess = function(position) {
         startPos = position;
@@ -23,11 +26,13 @@
         //   1: permission denied
         //   2: position unavailable (error response from location provider)
         //   3: timed out
-      };
-    return navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+    };
+
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
   }
 
-  function findFood(userLat, userLon) {
+  function findFood() {
+
     var request = new XMLHttpRequest();
     request.open('GET', '/api', true);
 
@@ -49,6 +54,8 @@
 
     request.send();
   }
+
+  document.getElementById('search').addEventListener('click', findFood);
 
   initialize();
 
