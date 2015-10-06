@@ -5,10 +5,9 @@
   var reloader = require('connect-livereload');
   var app = express();
 
-
-
   app.use(reloader());
   app.use(express.static('./client'));
+
 
 
   app.listen(9000, function(){

@@ -11,12 +11,12 @@ var paths = {
   html: './client/**/*.html',
   scripts: './client/app/**/*.js',
   styles: './client/app/**/*.css'
-}
+};
 
 gulp.task('default', $.sequence('inject', 'server', 'watch'));
 gulp.task('server', startServer);
 gulp.task('watch', startWatch);
-gulp.task('inject', startInject)
+gulp.task('inject', startInject);
 
 function startServer(){
   require('./server');
