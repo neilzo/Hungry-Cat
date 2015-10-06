@@ -8,8 +8,17 @@
 
   var router = express.Router();
 
-  router.get('/', function(req, res){
-    res.json({ message: 'hooray this works'});
+  router.use(function(req, res, next){
+    console.log('happenings!');
+
+    next();
+  });
+
+  router.route('/search/:params').get(function(req, res){
+    res.json({
+      message: 'search route hit, KO!',
+      body: req.params
+    });
   });
 
   var yelp = require('yelp').createClient({
