@@ -4,15 +4,15 @@
   var express = require('express');
   var reloader = require('connect-livereload');
   var app = express();
-  var yelpSecrets = require('./secrets.js');
+  var config = require('./secrets');
 
   var router = express.Router();
 
   var yelp = require('yelp').createClient({
-    consumer_key: yelpSecrets.consumer_key,
-    consumer_secret: yelpSecrets.consumer_secret,
-    token: yelpSecrets.token,
-    token_secret: yelpSecrets.token_secret
+    consumer_key: config.yelp.consumer_key,
+    consumer_secret: config.yelp.consumer_secret,
+    token: config.yelp.token,
+    token_secret: config.yelp.token_secret
   });
 
   router.use(function(req, res, next){
