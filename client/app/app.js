@@ -41,6 +41,18 @@
   function findFood(event) {
     event.preventDefault();
 
+    var term = encodeURIComponent(document.getElementById('term').value);
+    var location = encodeURIComponent(document.getElementById('location').value);
+
+    //initial validation
+    if (!term || !location) {
+      alert('Enter your requirements, fool!');
+      return;
+    }
+
+    var url = '/api/search?=' + term + '&location=' + location;
+
+    maiAJAXGet(url);
   }
 
   function findFoodLucky() {
@@ -50,6 +62,11 @@
       return;
     }
     var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
+
+    maiAJAXGet(url);
+  }
+
+  function maiAJAXGet(url) {
 
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
