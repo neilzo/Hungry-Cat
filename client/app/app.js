@@ -3,11 +3,13 @@
   var userLat;
   var userLon;
 
+  /* APP INIT */
   function initialize(){
     console.log('working!');
     getUserLocation();
   }
 
+  /* METHODS */
   function getUserLocation() {
     var startPos;
     var geoOptions = {
@@ -19,6 +21,8 @@
         startPos = position;
         userLat = startPos.coords.latitude;
         userLon = startPos.coords.longitude;
+
+        //disable when ready
         document.getElementById('feelinLucky').removeAttribute('disabled');
     };
 
@@ -34,7 +38,12 @@
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
   }
 
-  function findFood() {
+  function findFood(event) {
+    event.preventDefault();
+
+  }
+
+  function findFoodLucky() {
     //just to be safe
     if (!userLat && !userLon) {
       alert('coordinates not ready. try again.');
@@ -64,12 +73,10 @@
     request.send();
   }
 
-  function ready() {
+  /* EVENT LISTENERS */
+  document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
+  document.getElementById('search').addEventListener('submit', findFood);
 
-  }
-
-  document.getElementById('feelinLucky').addEventListener('click', findFood);
-
+  /* START THE DANG THING */
   initialize();
-
 })();
