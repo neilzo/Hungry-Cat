@@ -12,13 +12,14 @@
     var startPos;
     var geoOptions = {
       timeout: 10 * 1000,
-      maximumAge: 1000 * 60 * 10 //5 minutes before grabbing new location
+      maximumAge: 1000 * 60 * 10 //10 minutes before grabbing new location
     };
 
     var geoSuccess = function(position) {
         startPos = position;
         userLat = startPos.coords.latitude;
         userLon = startPos.coords.longitude;
+        document.getElementById('feelinLucky').removeAttribute('disabled');
     };
 
     var geoError = function(error) {
@@ -30,14 +31,16 @@
         //   3: timed out
     };
 
-    return navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
   }
 
   function findFood() {
+    //just to be safe
     if (!userLat && !userLon) {
-      alert('coordinates not ready');
+      alert('coordinates not ready. try again.');
+      return;
     }
-    var url = '/api/search?lat=' + userLat + '&lon=' + userLon;
+    var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
 
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
@@ -61,7 +64,11 @@
     request.send();
   }
 
-  document.getElementById('search').addEventListener('click', findFood);
+  function ready() {
+
+  }
+
+  document.getElementById('feelinLucky').addEventListener('click', findFood);
 
   initialize();
 

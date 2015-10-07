@@ -2,7 +2,7 @@
 
   'use strict';
   var express = require('express');
-  var reloader = require('connect-livereload');
+  //var reloader = require('connect-livereload');
   var app = express();
   var config = require('./secrets');
 
@@ -22,6 +22,21 @@
   });
 
   router.route('/search').get(function(req, res){
+    var term = req.query.term;
+    var location = req.query.location;
+
+    yelp.search({term: term, location: location}, function(error, data){
+      if (error) {
+        res.send({
+          message: 'There was an error searching Yelp.' + error
+        });
+      } else {
+        res.send(data);
+      }
+    });
+  });
+
+  router.route('/lucky').get(function(req, res){
     var ll = req.query.lat + ',' + req.query.lon;
 
     yelp.search({term: 'food', ll: ll}, function(error, data) {
@@ -37,7 +52,7 @@
   });
   
   app.use('/api', router);
-  app.use(reloader());
+  //app.use(reloader());
   app.use(express.static('./client'));
 
   app.listen(9000, function(){

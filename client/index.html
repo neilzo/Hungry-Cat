@@ -13,10 +13,18 @@
 <body>
 
   <h1>HELLO WORLD!</h1>
-  <div id="startLat"></div>
-  <div id="startLon"></div>
 
-  <button id="search">Find food near me</button>
+  <form id="search">
+    <label for="term">Term:</label>
+    <input type="text" name="term" id="term">
+
+    <label for="location">Location:</label>
+    <input type="text" name="location" id="location">
+
+    <button type="submit">Find foods!</button>
+  </form>
+
+  <button id="feelinLucky" disabled>Ya feeling lucky, punk?</button>
 
   <!-- inject:js -->
   <script src="app/app.js"></script>

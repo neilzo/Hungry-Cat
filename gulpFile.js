@@ -27,7 +27,8 @@ function startServer(){
 function watchServer() {
   nodemon({
     script: 'server.js', 
-    ext: 'js html',
+    ext: 'js',
+    ignore: ['app.js'],
     env: { 'NODE_ENV': 'development' }
   });
 }
