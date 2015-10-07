@@ -66,16 +66,38 @@
     maiAJAXGet(url);
   }
 
+  function formatResults(data) {
+    console.log(data.businesses);
+    var results = document.getElementById('results');
+    results.innerHTML = ''; //clear div for results
+    for (var i = 0; i < data.businesses.length; i++) {
+      var businessWrap = document.createElement('div');
+
+      var businessImage = document.createElement('img');
+      businessImage.setAttribute('src', data.businesses[i].image_url);
+      
+      var businessName = document.createElement('p');
+      var name = document.createTextNode(data.businesses[i].name);
+      businessName.appendChild(name);
+
+      businessWrap.appendChild(businessImage);
+      businessWrap.appendChild(businessName);
+
+      results.appendChild(businessWrap);
+    }
+  }
+
   function maiAJAXGet(url) {
 
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
+    document.getElementById('results').innerHTML = 'LOADING...';
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
         var data = JSON.parse(request.responseText);
-        console.log(data);
+        formatResults(data);
       } else {
         // We reached our target server, but it returned an error
         alert(request.responseText);
