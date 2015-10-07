@@ -8,19 +8,6 @@
 
   var router = express.Router();
 
-  router.use(function(req, res, next){
-    console.log('happenings!');
-
-    next();
-  });
-
-  router.route('/search/:params').get(function(req, res){
-    res.json({
-      message: 'search route hit, KO!',
-      body: req.params
-    });
-  });
-
   var yelp = require('yelp').createClient({
     consumer_key: yelpSecrets.consumer_key,
     consumer_secret: yelpSecrets.consumer_secret,
@@ -28,10 +15,26 @@
     token_secret: yelpSecrets.token_secret
   });
 
-  // yelp.search({term: "food", location: "New York"}, function(error, data) {
-  //   console.log(error);
-  //   console.log(data);
-  // });
+  router.use(function(req, res, next){
+    //console.log('happenings!');
+
+    next();
+  });
+
+  router.route('/search').get(function(req, res){
+    var ll = req.query.lat + ',' + req.query.lon;
+
+    yelp.search({term: 'food', ll: ll}, function(error, data) {
+      if (error) {
+        res.send({
+          message: 'There was an error searching Yelp.'
+        });
+      } else {
+        res.send(data);
+      }
+    });
+
+  });
   
   app.use('/api', router);
   app.use(reloader());

@@ -20,7 +20,6 @@ gulp.task('inject', startInject);
 
 function startServer(){
   require('./server');
-
 }
 function startWatch(){
   gulp.watch('./client/app/**/*.css', $.livereload.changed);

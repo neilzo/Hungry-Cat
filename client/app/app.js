@@ -1,5 +1,7 @@
 (function(){
   'use strict';
+  var userLat;
+  var userLon;
 
   function initialize(){
     console.log('working!');
@@ -15,8 +17,8 @@
 
     var geoSuccess = function(position) {
         startPos = position;
-        document.getElementById('startLat').innerHTML = startPos.coords.latitude;
-        document.getElementById('startLon').innerHTML = startPos.coords.longitude;
+        userLat = startPos.coords.latitude;
+        userLon = startPos.coords.longitude;
     };
 
     var geoError = function(error) {
@@ -28,13 +30,17 @@
         //   3: timed out
     };
 
-    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+    return navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
   }
 
   function findFood() {
+    if (!userLat && !userLon) {
+      alert('coordinates not ready');
+    }
+    var url = '/api/search?lat=' + userLat + '&lon=' + userLon;
 
     var request = new XMLHttpRequest();
-    request.open('GET', '/api', true);
+    request.open('GET', url, true);
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {

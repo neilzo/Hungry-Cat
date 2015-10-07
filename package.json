@@ -16,7 +16,8 @@
     "gulp-inject": "^1.0.2",
     "gulp-livereload": "^2.1.1",
     "gulp-load-plugins": "^0.7.0",
-    "gulp-sequence": "^0.2.1"
+    "gulp-sequence": "^0.2.1",
+    "nodemon": "^1.7.1"
   },
   "dependencies": {
     "yelp": "^0.2.0"
