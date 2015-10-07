@@ -1,6 +1,7 @@
 (function(){
   var gulp  = require('gulp');
   var $     = require('gulp-load-plugins')({lazy:false});
+  var nodemon = require('gulp-nodemon');
 
 $.livereload();
 $.livereload.listen();
@@ -14,13 +15,23 @@ var paths = {
 };
 
 gulp.task('default', $.sequence('inject', 'server', 'watch'));
-gulp.task('server', startServer);
+//gulp.task('server', startServer);
+gulp.task('server', watchServer);
 gulp.task('watch', startWatch);
 gulp.task('inject', startInject);
 
 function startServer(){
   require('./server');
 }
+
+function watchServer() {
+  nodemon({
+    script: 'server.js', 
+    ext: 'js html',
+    env: { 'NODE_ENV': 'development' }
+  });
+}
+
 function startWatch(){
   gulp.watch('./client/app/**/*.css', $.livereload.changed);
   gulp.watch('./client/app/**/*.js', $.livereload.changed);
