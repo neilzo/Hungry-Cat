@@ -75,12 +75,16 @@
 
       var businessImage = document.createElement('img');
       businessImage.setAttribute('src', data.businesses[i].image_url);
+
+      var businessesReview = document.createElement('img');
+      businessesReview.setAttribute('src', data.businesses[i].rating_img_url);
       
       var businessName = document.createElement('p');
       var name = document.createTextNode(data.businesses[i].name);
       businessName.appendChild(name);
 
       businessWrap.appendChild(businessImage);
+      businessWrap.appendChild(businessesReview);
       businessWrap.appendChild(businessName);
 
       results.appendChild(businessWrap);
