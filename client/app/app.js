@@ -2,6 +2,7 @@
   'use strict';
   var userLat;
   var userLon;
+  var offset = 0; //grab more results from yelp, since they limit a response to 20 businesses
 
   /* APP INIT */
   function initialize(){
@@ -69,6 +70,7 @@
   function formatResults(data) {
     console.log(data.businesses);
     var results = document.getElementById('results');
+    
     results.innerHTML = ''; //clear div for results
     for (var i = 0; i < data.businesses.length; i++) {
       var businessWrap = document.createElement('div');
@@ -89,10 +91,18 @@
 
       results.appendChild(businessWrap);
     }
+    document.getElementById('more').classList.remove('hide');
   }
 
-  function maiAJAXGet(url) {
+  function getMore() {
+    offset += 20;
+    console.log(offset);
+    var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
 
+    maiAJAXGet(url);
+  }
+
+  function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
     document.getElementById('results').innerHTML = 'LOADING...';
@@ -119,6 +129,7 @@
   /* EVENT LISTENERS */
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
   document.getElementById('search').addEventListener('submit', findFood);
+  document.getElementById('more').addEventListener('click', getMore);
 
   /* START THE DANG THING */
   initialize();

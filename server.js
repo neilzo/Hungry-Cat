@@ -38,16 +38,30 @@
 
   router.route('/lucky').get(function(req, res){
     var ll = req.query.lat + ',' + req.query.lon;
+    var offset = req.query.offset;
 
-    yelp.search({term: 'food', ll: ll}, function(error, data) {
-      if (error) {
-        res.send({
-          message: 'There was an error searching Yelp.'
-        });
-      } else {
-        res.send(data);
-      }
-    });
+    //sucky
+    if (offset) {
+      yelp.search({term: 'food', ll: ll, offset: offset}, function(error, data) {
+        if (error) {
+          res.send({
+            message: 'There was an error searching Yelp.'
+          });
+        } else {
+          res.send(data);
+        }
+      });
+    } else {
+      yelp.search({term: 'food', ll: ll}, function(error, data) {
+        if (error) {
+          res.send({
+            message: 'There was an error searching Yelp.'
+          });
+        } else {
+          res.send(data);
+        }
+      });
+    }
 
   });
   
