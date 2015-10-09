@@ -24,16 +24,30 @@
   router.route('/search').get(function(req, res){
     var term = req.query.term;
     var location = req.query.location;
+    var offset = req.query.offset;
 
-    yelp.search({term: term, location: location, category_filter: 'food'}, function(error, data){
-      if (error) {
-        res.send({
-          message: 'There was an error searching Yelp.' + error
-        });
-      } else {
-        res.send(data);
-      }
-    });
+    //sucky
+    if (offset) {
+      yelp.search({term: term, location: location, category_filter: 'food', offset: offset}, function(error, data){
+        if (error) {
+          res.send({
+            message: 'There was an error searching Yelp.' + error
+          });
+        } else {
+          res.send(data);
+        }
+      });
+    } else {
+      yelp.search({term: term, location: location, category_filter: 'food'}, function(error, data){
+        if (error) {
+          res.send({
+            message: 'There was an error searching Yelp.' + error
+          });
+        } else {
+          res.send(data);
+        }
+      });
+    }
   });
 
   router.route('/lucky').get(function(req, res){
