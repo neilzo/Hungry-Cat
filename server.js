@@ -25,7 +25,7 @@
     var term = req.query.term;
     var location = req.query.location;
 
-    yelp.search({term: term, location: location}, function(error, data){
+    yelp.search({term: term, location: location, category_filter: 'food'}, function(error, data){
       if (error) {
         res.send({
           message: 'There was an error searching Yelp.' + error
