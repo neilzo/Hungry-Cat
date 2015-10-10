@@ -13,18 +13,48 @@
 
   window.initMap = function() {
     var map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 6
+      center: {lat: 40.7127, lng: -73.935242},
+      zoom: 14
     });
-    var infoWindow = new google.maps.InfoWindow({map: map});
+    var infoWindow = new google.maps.InfoWindow({
+      content: 'DIS YOU'
+    });
+    //infoWindow.close();
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      var marker = new google.maps.Marker({
+          position: pos,
+          animation: google.maps.Animation.DROP,
+          map: map
+        });
+
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
+      map.setCenter(pos);
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
   }
+
+  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+      'Error: The Geolocation service failed.' :
+      'Error: Your browser doesn\'t support geolocation.');
+}
 
   /* METHODS */
   function getUserLocation() {
     var startPos;
     var geoOptions = {
       timeout: 10 * 1000,
-      maximumAge: 1000 * 60 * 10 //10 minutes before grabbing new location
+      maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
     };
 
     var geoSuccess = function(position) {
