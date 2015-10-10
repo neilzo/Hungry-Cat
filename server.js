@@ -1,5 +1,4 @@
 (function(){
-
   'use strict';
   var express = require('express');
   //var reloader = require('connect-livereload');
@@ -28,7 +27,7 @@
 
     //sucky
     if (offset) {
-      yelp.search({term: term, location: location, category_filter: 'food', offset: offset}, function(error, data){
+      yelp.search({term: term, location: location, category_filter: 'food', offset: offset}, function(error, data) {
         if (error) {
           res.send({
             message: 'There was an error searching Yelp.' + error
@@ -38,7 +37,7 @@
         }
       });
     } else {
-      yelp.search({term: term, location: location, category_filter: 'food'}, function(error, data){
+      yelp.search({term: term, location: location, category_filter: 'food'}, function(error, data) { 
         if (error) {
           res.send({
             message: 'There was an error searching Yelp.' + error
@@ -50,7 +49,7 @@
     }
   });
 
-  router.route('/lucky').get(function(req, res){
+  router.route('/lucky').get(function(req, res) {
     var ll = req.query.lat + ',' + req.query.lon;
     var offset = req.query.offset;
 
@@ -76,20 +75,12 @@
         }
       });
     }
-
-  });
-
-  router.route('/map').get(function() {
-    var lat = req.query.lat;
-    var lon = req.query.lon;
   });
   
   app.use('/api', router);
   //app.use(reloader());
   app.use(express.static('./client'));
 
-  app.listen(9000, function(){
-    console.log('App Listening on localhost:9000');
-  });
+  app.listen(9000, process.env.PORT, process.env.IP);
 
 })();
