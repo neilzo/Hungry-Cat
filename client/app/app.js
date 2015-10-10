@@ -1,12 +1,13 @@
-(function(){
+(function() {
   'use strict';
   var userLat;
   var userLon;
   var offset = 0; //grab more results from yelp, since they limit a response to 20 businesses
   var isLucky = false;
+  var businessLocations = [];
 
   /* APP INIT */
-  function initialize(){
+  function initialize() {
     console.log('working!');
     getUserLocation();
   }
@@ -33,13 +34,13 @@
       });
 
       marker.addListener('click', function() {
-        infowindow.open(map, marker);
+        infoWindow.open(map, marker);
       });
       map.setCenter(pos);
     }, function() {
       handleLocationError(true, infoWindow, map.getCenter());
     });
-  }
+  };
 
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
@@ -57,12 +58,12 @@
     };
 
     var geoSuccess = function(position) {
-        startPos = position;
-        userLat = startPos.coords.latitude;
-        userLon = startPos.coords.longitude;
+      startPos = position;
+      userLat = startPos.coords.latitude;
+      userLon = startPos.coords.longitude;
 
-        //disable when ready
-        document.getElementById('feelinLucky').removeAttribute('disabled');
+      //disable when ready
+      document.getElementById('feelinLucky').removeAttribute('disabled');
     };
 
     var geoError = function(error) {
@@ -71,19 +72,20 @@
         //   1: permission denied
         //   2: position unavailable (error response from location provider)
         //   3: timed out
-        if (!error.code === 2) {
-          alert('Error getting yo location. Error code: ' + error.code);
-        }
+      if (!error.code === 2) {
+        alert('Error getting yo location. Error code: ' + error.code);
+      }
     };
 
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
   }
 
   function findFood(event) {
-    event.preventDefault();
-
     var term = encodeURIComponent(document.getElementById('term').value);
     var location = encodeURIComponent(document.getElementById('location').value);
+    var url;
+
+    event.preventDefault();
 
     //initial validation
     if (!term || !location) {
@@ -91,7 +93,7 @@
       return;
     }
 
-    var url = '/api/search?=' + term + '&location=' + location;
+    url = '/api/search?=' + term + '&location=' + location;
 
     maiAJAXGet(url);
     isLucky = false; //keep track of state, of sorts
@@ -99,32 +101,40 @@
 
   function findFoodLucky() {
     //just to be safe
+    var url;
+
     if (!userLat && !userLon) {
       alert('coordinates not ready. try again.');
       return;
     }
-    var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
+
+    url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
 
     maiAJAXGet(url);
     isLucky = true; //keep track of state, of sorts
   }
 
   function formatResults(data) {
-    console.log(data.businesses);
+    var businessWrap,
+      businessesReview,
+      businessImage,
+      businessName,
+      name,
+      i;
     var results = document.getElementById('results');
     
     results.innerHTML = ''; //clear div for results
-    for (var i = 0; i < data.businesses.length; i++) {
-      var businessWrap = document.createElement('div');
+    for (i = 0; i < data.businesses.length; i++) {
+      businessWrap = document.createElement('div');
 
-      var businessImage = document.createElement('img');
+      businessImage = document.createElement('img');
       businessImage.setAttribute('src', data.businesses[i].image_url);
 
-      var businessesReview = document.createElement('img');
+      businessesReview = document.createElement('img');
       businessesReview.setAttribute('src', data.businesses[i].rating_img_url);
       
-      var businessName = document.createElement('p');
-      var name = document.createTextNode(data.businesses[i].name);
+      businessName = document.createElement('p');
+      name = document.createTextNode(data.businesses[i].name);
       businessName.appendChild(name);
 
       businessWrap.appendChild(businessImage);
@@ -137,13 +147,12 @@
   }
 
   function getMore() {
-
-    document.getElementById('more').classList.add('hide');
-
-    offset += 20; //increase global offset to grab more results
     var url;
     var term = encodeURIComponent(document.getElementById('term').value);
     var location = encodeURIComponent(document.getElementById('location').value);
+    offset += 20; //increase global offset to grab more results
+    
+    document.getElementById('more').classList.add('hide');
 
     if (isLucky) {
       url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
@@ -154,16 +163,31 @@
     maiAJAXGet(url);
   }
 
+  function mapYoDigs(data) {
+    var i;
+    var pos = {};
+
+    for (i = 0; i < data.length; i++) {
+      pos.lat = data[i].coordinate.latitude;
+      pos.lon = data[i].coordinate.longitude;
+
+      businessLocations.push(pos);
+    }
+    console.log(businessLocations);
+  }
+
   function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
+    var data;
     request.open('GET', url, true);
     document.getElementById('results').innerHTML = 'LOADING...';
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        var data = JSON.parse(request.responseText);
+        data = JSON.parse(request.responseText);
         formatResults(data);
+        mapYoDigs(data.businesses.location);
       } else {
         // We reached our target server, but it returned an error
         alert(request.responseText);
