@@ -6,7 +6,8 @@
   var isLucky = false;
   var businessLocations = [];
   var map;
-  var marker;
+  //var marker;
+  var infoWindow;
 
   /* APP INIT */
   function initialize() {
@@ -17,9 +18,9 @@
   window.initMap = function() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7127, lng: -73.935242},
-      zoom: 14
+      zoom: 15
     });
-    var infoWindow = new google.maps.InfoWindow({ //eslint-disable-line
+    infoWindow = new google.maps.InfoWindow({ //eslint-disable-line
       content: 'DIS YOU'
     });
 
@@ -32,7 +33,7 @@
       var houseIcon = {
         url: '../public/house2.png',
         size: new google.maps.Size(25, 25),
-        origin: new google.maps.Point(5, 0),
+        origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(0, 30)
       };
 
@@ -41,14 +42,12 @@
         type: 'poly'
       };
 
-      marker = new google.maps.Marker({
+      var marker = new google.maps.Marker({
         position: pos,
         icon: houseIcon,
         shape: shape,
         map: map
       });
-
-      console.log(marker);
 
       marker.addListener('click', function() {
         infoWindow.open(map, marker);
@@ -61,15 +60,24 @@
 
   window.addMarkers = function(data) {
     for (var i = 0; i < data.length; i++) { //eslint-disable-line
-      console.log(data[i]);
-      marker = new google.maps.Marker({ //eslint-disable-line
-        position: data[i],
+      var marker = new google.maps.Marker({ //eslint-disable-line 
+        position: data[i].pos,
         animation: google.maps.Animation.DROP,
         map: map,
         title: 'test',
         zIndex: 3
       });
-      console.log(marker);
+
+      marker.info = new google.maps.InfoWindow({
+        content: data[i].name
+      });
+
+      google.maps.event.addListener(marker, 'mouseover', function() {
+        this.info.open(map, this);
+      });
+      google.maps.event.addListener(marker, 'mouseout', function() {
+        this.info.close(map, marker);
+      });
     }
   };
 
@@ -196,11 +204,17 @@
 
   function mapYoDigs(data) {
     for (var i = 0; i < data.length; i++) { //eslint-disable-line
+      var biz = {};
       var pos = {}; //eslint-disable-line
+
       pos.lat = data[i].location.coordinate.latitude;
       pos.lng = data[i].location.coordinate.longitude;
+      
+      biz.pos = pos;
 
-      businessLocations.push(pos);
+      biz.name = data[i].name;
+
+      businessLocations.push(biz);
     }
     window.addMarkers(businessLocations);
   }
