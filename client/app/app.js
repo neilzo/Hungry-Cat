@@ -4,9 +4,8 @@
   var userLon;
   var offset = 0; //grab more results from yelp, since they limit a response to 20 businesses
   var isLucky = false;
-  var businessLocations = [];
   var map;
-  //var marker;
+  var businessMarkers = [];
   var infoWindow;
 
   /* APP INIT */
@@ -58,14 +57,11 @@
     });
   };
 
-  window.addMarkers = function(data) {
+  function addMarkers(data) {
     for (var i = 0; i < data.length; i++) { //eslint-disable-line
       var marker = new google.maps.Marker({ //eslint-disable-line 
         position: data[i].pos,
-        animation: google.maps.Animation.DROP,
-        map: map,
-        title: 'test',
-        zIndex: 3
+        animation: google.maps.Animation.DROP
       });
 
       marker.info = new google.maps.InfoWindow({
@@ -78,8 +74,23 @@
       google.maps.event.addListener(marker, 'mouseout', function() {
         this.info.close(map, marker);
       });
+
+      businessMarkers.push(marker);
     }
+    setMapOnAll(map);
   };
+
+  function setMapOnAll(map) {
+    for (var i = 0; i < businessMarkers.length; i++) {
+      businessMarkers[i].setMap(map);
+    }
+  }
+
+  function removeMarkers() {
+    setMapOnAll(null);
+    businessMarkers = [];
+  }
+
 
   /* METHODS */
   function getUserLocation() {
@@ -134,6 +145,7 @@
 
     url = '/api/search?=' + term + '&location=' + location;
 
+    removeMarkers(); //remove existing markers
     maiAJAXGet(url);
     isLucky = false; //keep track of state, of sorts
   }
@@ -149,6 +161,7 @@
 
     url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
 
+    removeMarkers(); //remove existing markers
     maiAJAXGet(url);
     isLucky = true; //keep track of state, of sorts
   }
@@ -193,6 +206,8 @@
     
     document.getElementById('more').classList.add('hide');
 
+    removeMarkers(); //remove existing markers
+
     if (isLucky) {
       url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
     } else {
@@ -203,6 +218,7 @@
   }
 
   function mapYoDigs(data) {
+    var businessLocations = [];
     for (var i = 0; i < data.length; i++) { //eslint-disable-line
       var biz = {};
       var pos = {}; //eslint-disable-line
@@ -216,7 +232,7 @@
 
       businessLocations.push(biz);
     }
-    window.addMarkers(businessLocations);
+    addMarkers(businessLocations);
   }
 
   function maiAJAXGet(url) {    
