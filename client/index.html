@@ -26,11 +26,27 @@
 
   <button id="feelinLucky" disabled>Ya feeling lucky, punk?</button>
 
-  <div id="results"></div>
-  <button id="more" class="hide">Still can't decide, give me more options!</button>
+  <div class="main-content">
+    
+    <div class="left-col">
+      <div id="results" class="results"></div>
+      <button id="more" class="hide">Still can't decide, give me more options!</button>
+    </div>
 
+    <div class="right-col">
+        <div id="map" class="map"></div>
+    </div>
+  </div>
+
+
+  
   <!-- inject:js -->
   <script src="app/app.js"></script>
   <!-- endinject -->
+
+  <!-- Goog maps -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN1GJY-5O_PfT0XlMNiq-trjDof2WQlX8&signed_in=true&callback=initMap" async defer></script>
+  <!-- end Goog maps -->
+
 </body>
 </html>

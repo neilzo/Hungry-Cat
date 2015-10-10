@@ -78,6 +78,11 @@
     }
 
   });
+
+  router.route('/map').get(function() {
+    var lat = req.query.lat;
+    var lon = req.query.lon;
+  });
   
   app.use('/api', router);
   //app.use(reloader());

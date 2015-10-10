@@ -11,6 +11,14 @@
     getUserLocation();
   }
 
+  window.initMap = function() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: -34.397, lng: 150.644},
+      zoom: 6
+    });
+    var infoWindow = new google.maps.InfoWindow({map: map});
+  }
+
   /* METHODS */
   function getUserLocation() {
     var startPos;
@@ -29,12 +37,14 @@
     };
 
     var geoError = function(error) {
-        alert('Error getting yo location. Error code: ' + error.code);
         // error.code can be:
         //   0: unknown error
         //   1: permission denied
         //   2: position unavailable (error response from location provider)
         //   3: timed out
+        if (!error.code === 2) {
+          alert('Error getting yo location. Error code: ' + error.code);
+        }
     };
 
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
@@ -98,7 +108,10 @@
   }
 
   function getMore() {
-    offset += 20;
+
+    document.getElementById('more').classList.add('hide');
+
+    offset += 20; //increase global offset to grab more results
     var url;
     var term = encodeURIComponent(document.getElementById('term').value);
     var location = encodeURIComponent(document.getElementById('location').value);
