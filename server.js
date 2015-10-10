@@ -14,7 +14,7 @@
     token_secret: config.yelp.token_secret
   });
 
-  router.use(function(req, res, next){
+  router.use(function(req, res, next) {
     //console.log('happenings!');
 
     next();
@@ -81,6 +81,6 @@
   //app.use(reloader());
   app.use(express.static('./client'));
 
-  app.listen(9000, process.env.PORT, process.env.IP);
+  app.listen(9000);
 
 })();
