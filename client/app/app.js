@@ -19,7 +19,6 @@
     var infoWindow = new google.maps.InfoWindow({
       content: 'DIS YOU'
     });
-    //infoWindow.close();
 
     navigator.geolocation.getCurrentPosition(function(position) {
       var pos = {
@@ -28,10 +27,10 @@
       };
 
       var marker = new google.maps.Marker({
-          position: pos,
-          animation: google.maps.Animation.DROP,
-          map: map
-        });
+        position: pos,
+        animation: google.maps.Animation.DROP,
+        map: map
+      });
 
       marker.addListener('click', function() {
         infowindow.open(map, marker);
@@ -47,7 +46,7 @@
     infoWindow.setContent(browserHasGeolocation ?
       'Error: The Geolocation service failed.' :
       'Error: Your browser doesn\'t support geolocation.');
-}
+  }
 
   /* METHODS */
   function getUserLocation() {
