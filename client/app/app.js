@@ -5,6 +5,8 @@
   var offset = 0; //grab more results from yelp, since they limit a response to 20 businesses
   var isLucky = false;
   var businessLocations = [];
+  var map;
+  var marker;
 
   /* APP INIT */
   function initialize() {
@@ -13,11 +15,11 @@
   }
 
   window.initMap = function() {
-    var map = new google.maps.Map(document.getElementById('map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7127, lng: -73.935242},
       zoom: 14
     });
-    var infoWindow = new google.maps.InfoWindow({
+    var infoWindow = new google.maps.InfoWindow({ //eslint-disable-line
       content: 'DIS YOU'
     });
 
@@ -27,11 +29,26 @@
         lng: position.coords.longitude
       };
 
-      var marker = new google.maps.Marker({
+      var houseIcon = {
+        url: '../public/house2.png',
+        size: new google.maps.Size(25, 25),
+        origin: new google.maps.Point(5, 0),
+        anchor: new google.maps.Point(0, 30)
+      };
+
+      var shape = {
+        coords: [1, 1, 1, 20, 18, 20, 18, 1],
+        type: 'poly'
+      };
+
+      marker = new google.maps.Marker({
         position: pos,
-        animation: google.maps.Animation.DROP,
+        icon: houseIcon,
+        shape: shape,
         map: map
       });
+
+      console.log(marker);
 
       marker.addListener('click', function() {
         infoWindow.open(map, marker);
@@ -42,12 +59,19 @@
     });
   };
 
-  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-      'Error: The Geolocation service failed.' :
-      'Error: Your browser doesn\'t support geolocation.');
-  }
+  window.addMarkers = function(data) {
+    for (var i = 0; i < data.length; i++) { //eslint-disable-line
+      console.log(data[i]);
+      marker = new google.maps.Marker({ //eslint-disable-line
+        position: data[i],
+        animation: google.maps.Animation.DROP,
+        map: map,
+        title: 'test',
+        zIndex: 3
+      });
+      console.log(marker);
+    }
+  };
 
   /* METHODS */
   function getUserLocation() {
@@ -78,6 +102,13 @@
     };
 
     navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+  }
+
+  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+      'Error: The Geolocation service failed.' :
+      'Error: Your browser doesn\'t support geolocation.');
   }
 
   function findFood(event) {
@@ -164,16 +195,14 @@
   }
 
   function mapYoDigs(data) {
-    var i;
-    var pos = {};
-
-    for (i = 0; i < data.length; i++) {
-      pos.lat = data[i].coordinate.latitude;
-      pos.lon = data[i].coordinate.longitude;
+    for (var i = 0; i < data.length; i++) { //eslint-disable-line
+      var pos = {}; //eslint-disable-line
+      pos.lat = data[i].location.coordinate.latitude;
+      pos.lng = data[i].location.coordinate.longitude;
 
       businessLocations.push(pos);
     }
-    console.log(businessLocations);
+    window.addMarkers(businessLocations);
   }
 
   function maiAJAXGet(url) {    
@@ -187,7 +216,7 @@
         // Success!
         data = JSON.parse(request.responseText);
         formatResults(data);
-        mapYoDigs(data.businesses.location);
+        mapYoDigs(data.businesses);
       } else {
         // We reached our target server, but it returned an error
         alert(request.responseText);
