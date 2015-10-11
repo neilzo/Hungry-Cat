@@ -18,7 +18,7 @@
 
   <div class="page-wrap">
     
-    <div class="container header">
+    <div id="header" class="container header">
       
       <h1 class="header-text">Hungry and indecisive?</h1>
       <h3 class="header-subtext">Click the button to see how far the rabbit hole goes...</h3>
@@ -36,11 +36,17 @@
 
     </div>
 
-    <div class="container main-content">
+    <div id="main" class="container main-content">
       
+      <div class="loader"></div>
+
       <div class="left-col">
+        <div id="btn-wrap" class="btn-wrap hide">
+          <button id="back" class="btn btn-action"> < Back</button>
+          <button id="more" class="btn btn-action">MORE! ></button>
+        </div>
+
         <div id="results" class="results grid effect"></div>
-        <button id="more" class="btn btn-action hide">Still can't decide, give me more options!</button>
       </div>
 
       <div class="right-col">

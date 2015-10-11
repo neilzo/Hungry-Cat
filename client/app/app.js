@@ -162,6 +162,8 @@
     url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
 
     removeMarkers(); //remove existing markers
+    document.getElementById('header').classList.add('fadeout');
+    document.getElementById('main').classList.add('fadein');
     maiAJAXGet(url);
     isLucky = true; //keep track of state, of sorts
   }
@@ -174,7 +176,6 @@
       name,
       i,
       bizAll = [];
-    var results = document.getElementById('results');
     
     for (i = 0; i < data.businesses.length; i++) {
       businessWrap = document.createElement('div');
@@ -210,8 +211,15 @@
     }
 
     results.innerHTML = ''; //clear div for results
+    //manage btn states
+    if (offset === 0) {
+      document.getElementById('btn-wrap').classList.remove('hide');
+      document.getElementById('back').classList.add('hide');
+    } else {
+      document.getElementById('btn-wrap').classList.remove('hide');
+      document.getElementById('back').classList.remove('hide');
+    }
     results.appendChild(temp); //append all cards to dom
-    document.getElementById('more').classList.remove('hide');
   }
 
   function getMore() {
@@ -220,14 +228,28 @@
     var location = encodeURIComponent(document.getElementById('location').value);
     offset += 20; //increase global offset to grab more results
     
-    document.getElementById('more').classList.add('hide');
-
     removeMarkers(); //remove existing markers
 
     if (isLucky) {
       url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
     } else {
       url = '/api/search?=' + term + '&location=' + location + '&offset=' + offset;
+    }
+
+    maiAJAXGet(url);
+  }
+
+  function goBack() {
+    var url;
+    offset -= 20;
+
+    removeMarkers(); //remove exiting markers
+
+    if (isLucky) {
+      url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
+    } else {
+      //noop for now
+      // url = '/api/search?=' + term + '&location=' + location + '&offset=' + offset;
     }
 
     maiAJAXGet(url);
@@ -261,7 +283,9 @@
   function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
     var data;
+
     request.open('GET', url, true);
+    document.getElementById('btn-wrap').classList.add('hide');
     document.getElementById('results').innerHTML = 'LOADING...';
 
     request.onload = function() {
@@ -289,6 +313,7 @@
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
   document.getElementById('search').addEventListener('submit', findFood);
   document.getElementById('more').addEventListener('click', getMore);
+  document.getElementById('back').addEventListener('click', goBack);
 
   /* START THE DANG THING */
   initialize();
