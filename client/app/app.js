@@ -182,7 +182,7 @@
 
       businessImage = document.createElement('img');
       businessImage.setAttribute('class', 'main-img');
-      businessImage.setAttribute('src', data.businesses[i].image_url);
+      businessImage.setAttribute('src', setYelpImg(data.businesses[i].image_url, 'ls'));
 
       businessesReview = document.createElement('img');
       businessesReview.setAttribute('src', data.businesses[i].rating_img_url);
@@ -251,6 +251,13 @@
     addMarkers(businessLocations);
   }
 
+  function setYelpImg(url, type) {
+    var extension = type + '.jpg';
+    var regex = /[^/]*$/;
+
+    return url.replace(regex, extension);
+  }
+
   function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
     var data;
@@ -261,6 +268,7 @@
       if (request.status >= 200 && request.status < 400) {
         // Success!
         data = JSON.parse(request.responseText);
+        console.log(data);
         formatResults(data);
         mapYoDigs(data.businesses);
       } else {
