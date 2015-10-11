@@ -176,7 +176,6 @@
       bizAll = [];
     var results = document.getElementById('results');
     
-    results.innerHTML = ''; //clear div for results
     for (i = 0; i < data.businesses.length; i++) {
       businessWrap = document.createElement('div');
       businessWrap.setAttribute('class', 'food-card animate');
@@ -210,6 +209,7 @@
       temp.appendChild(bizArr[i]);
     }
 
+    results.innerHTML = ''; //clear div for results
     results.appendChild(temp); //append all cards to dom
     document.getElementById('more').classList.remove('hide');
   }

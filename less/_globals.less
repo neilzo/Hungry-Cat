@@ -5,12 +5,14 @@
 html {
   height: 100%;
   font-size: 62.5%;
+  font-family: @font-family-default;
 }
 
 body {
   //height: 100%;
   font-size: 1.6rem;
-  background: url('https://images.unsplash.com/photo-1432752641289-a25fc853fceb?q=80&fm=jpg&s=845db824014f34ca56b05451725e9270') center center;
+  background: url('bg.jpg') center center;
+  background-repeat: no-repeat;
   background-size: cover;
 
   &:after {
@@ -20,9 +22,14 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.4);
     z-index: @z--1;
   }
+}
+
+//TODO: move to typography.less
+h1, h2, h3, h4, h5, h6 {
+  font-family: @font-family-headings;
 }
 
 .main-content {
@@ -44,7 +51,6 @@ body {
   font-size: 1.4rem;
   display: inline-flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 
 .map {
