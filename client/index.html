@@ -13,32 +13,36 @@
 <body>
 
   <div class="page-wrap">
-      <div class="container header">
-    <h1 class="header-text">HELLO WORLD!</h1>
-    <form id="search" class="hide">
-      <label for="term">Term:</label>
-      <input type="text" id="term">
-
-      <label for="location">Location:</label>
-      <input type="text" id="location">
-
-      <button type="submit">Find foods!</button>
-    </form>
-
-    <button id="feelinLucky" class="btn btn-action" disabled>Ya feeling lucky, punk?</button>
-  </div>
-
-  <div class="container main-content">
     
-    <div class="left-col">
-      <div id="results" class="results"></div>
-      <button id="more" class="btn hide">Still can't decide, give me more options!</button>
+    <div class="container header">
+      
+      <h1 class="header-text">HELLO WORLD!</h1>
+      <form id="search" class="hide">
+        <label for="term">Term:</label>
+        <input type="text" id="term">
+
+        <label for="location">Location:</label>
+        <input type="text" id="location">
+
+        <button type="submit">Find foods!</button>
+      </form>
+
+      <button id="feelinLucky" class="btn btn-action" disabled>Ya feeling lucky, punk?</button>
+
     </div>
 
-    <div class="right-col">
-        <div id="map" class="map"></div>
+    <div class="container main-content">
+      
+      <div class="left-col">
+        <div id="results" class="results grid effect"></div>
+        <button id="more" class="btn btn-action hide">Still can't decide, give me more options!</button>
+      </div>
+
+      <div class="right-col">
+          <div id="map" class="map"></div>
+      </div>
+
     </div>
-  </div>
   </div>
 
 

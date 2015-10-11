@@ -172,14 +172,17 @@
       businessImage,
       businessName,
       name,
-      i;
+      i,
+      bizAll = [];
     var results = document.getElementById('results');
     
     results.innerHTML = ''; //clear div for results
     for (i = 0; i < data.businesses.length; i++) {
       businessWrap = document.createElement('div');
+      businessWrap.setAttribute('class', 'food-card animate');
 
       businessImage = document.createElement('img');
+      businessImage.setAttribute('class', 'main-img');
       businessImage.setAttribute('src', data.businesses[i].image_url);
 
       businessesReview = document.createElement('img');
@@ -193,8 +196,21 @@
       businessWrap.appendChild(businessesReview);
       businessWrap.appendChild(businessName);
 
-      results.appendChild(businessWrap);
+      bizAll.push(businessWrap);
     }
+    addToGrid(bizAll);
+  }
+
+  function addToGrid(bizArr) {
+    var results = document.getElementById('results');
+    var temp = document.createElement('div'); //holder for all grid items
+
+    for (var i = 0; i < bizArr.length; i++) {
+      bizArr[i].style.animationDelay = (i * 0.1 + 0.2) + 's'; //stagger animation in of each element
+      temp.appendChild(bizArr[i]);
+    }
+
+    results.appendChild(temp); //append all cards to dom
     document.getElementById('more').classList.remove('hide');
   }
 
