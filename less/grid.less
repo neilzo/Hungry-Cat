@@ -18,16 +18,16 @@
   width: 90%;
 
   .row {
-    margin-left: -10px;
-    margin-right: -10px
+    margin-left: -(@gutter-width);
+    margin-right: -(@gutter-width);
   }
 
   @media (min-width: @screen-sm) {
-    width: 85%;
+    width: 90%;
   }
 
   @media (min-width: @screen-md) {
-    width: 70%;
+    width: 90%;
   }
 
 }
@@ -47,7 +47,7 @@
 
   .col {
     display: flex;
-    padding: 0 20px;
+    padding: 0 (2* @gutter-width);
 
     @media (min-width: @screen-xs-min) {
       .generate-columns(12, m);
