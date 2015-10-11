@@ -151,9 +151,9 @@
   }
 
   function findFoodLucky() {
-    //just to be safe
     var url;
 
+    //just to be safe
     if (!userLat && !userLon) {
       alert('coordinates not ready. try again.');
       return;
