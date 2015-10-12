@@ -51,18 +51,33 @@
 
   router.route('/lucky').get(function(req, res) {
     var ll = req.query.lat + ',' + req.query.lon;
+    var offset = req.query.offset;
 
-    //sort: 1 sorts by distance    
-    yelp.search({term: 'food', sort: 1, ll: ll}, function(error, data) {
-      if (error) {
-        res.send({
-          message: 'There was an error searching Yelp.',
-          error: error
-        });
-      } else {
-        res.send(data);
-      }
-    });
+    if (offset) {
+      //sort: 1 sorts by distance    
+      yelp.search({term: 'food', sort: 1, ll: ll, offset: offset}, function(error, data) {
+        if (error) {
+          res.send({
+            message: 'There was an error searching Yelp.',
+            error: error
+          });
+        } else {
+          res.send(data);
+        }
+      });
+    } else {
+      //sort: 1 sorts by distance    
+      yelp.search({term: 'food', sort: 1, ll: ll}, function(error, data) {
+        if (error) {
+          res.send({
+            message: 'There was an error searching Yelp.',
+            error: error
+          });
+        } else {
+          res.send(data);
+        }
+      });
+    }
   });
   
   app.use('/api', router);

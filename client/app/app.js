@@ -149,6 +149,7 @@
     maiAJAXGet(url);
   }
 
+  //this is becoming a beast, TODO: find a better way
   function formatResults(data) {
     var businessWrap,
       businessesReview,
@@ -162,8 +163,6 @@
       businessCats = getBizCategories(biz),
       businessAddress,
       businessAddressString = getBizAddress(biz);
-
-    console.log(biz);
 
     businessWrap = document.createElement('div');
     businessWrap.setAttribute('class', 'food-card animate');
@@ -205,15 +204,16 @@
     result.appendChild(businessWrap); //append business
   }
 
-  function reRoll() {
-    var url;
-    offset += 20; //increase global offset to grab more results
-    
+  function reRoll(refresh) {
     //removeMarkers(); //remove existing markers
+    if (refresh === 'refresh') {
+      offset += 20; //increase global offset to grab more results
+      var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
 
-    //maiAJAXGet(url);
-
-    formatResults(bizData);
+      maiAJAXGet(url);
+    } else {
+      formatResults(bizData);
+    }
   }
 
   function mapYoDigs(data) {
@@ -241,14 +241,33 @@
     return url.replace(regex, extension);
   }
 
+  function allShown(element) {
+    return element.shown;
+  }
+
   function selectBiz(data) {
     var random = Math.floor(Math.random() * data.businesses.length);
+    var chosenOne;
 
-    return data.businesses[random];
+    //if all shown, query for more, else try to find unshown in current data
+    if (data.businesses[random].shown) {
+      if (data.businesses.every(allShown)) {
+        console.log('SHOWN ALL, REQUESTING MORE!');
+        reRoll('refresh');
+      } else {
+        console.log('shown, trying again');
+        return selectBiz(bizData); //OH BOY RECURSION
+      }
+    }
+
+    chosenOne = data.businesses[random];
+    chosenOne.shown = true; //is this the best way? no, but i'm gonna try it
+    return chosenOne;
   }
 
   function getBizCategories(biz) {
     var catString = '';
+    
     for (var i = 0; i < biz.categories.length; i++) {
       if (biz.categories.length === 1 || i === biz.categories.length - 1) {
         catString += biz.categories[i][0];
@@ -277,8 +296,8 @@
       if (request.status >= 200 && request.status < 400) {
         // Success!
         data = JSON.parse(request.responseText);
-        bizData = data;
-        formatResults(data);
+        bizData = data; //store so we can flag which results were already seen, go back, etc.
+        formatResults(bizData); 
         //mapYoDigs(data.businesses);
       } else {
         // We reached our target server, but it returned an error
