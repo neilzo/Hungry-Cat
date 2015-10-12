@@ -27,7 +27,7 @@
 
     window.icons = {
       start: {
-        url: '../public/happysammich30x30.png',
+        url: '../public/hungrygato.png',
         size: new google.maps.Size(30, 30),
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(0, 30)
@@ -76,7 +76,7 @@
     directionsService.route({
       origin: {lat: userLat, lng: userLon},
       destination: {lat: bizLocation.lat, lng: bizLocation.lng},
-      travelMode: google.maps.TravelMode.WALKING
+      travelMode: google.maps.TravelMode.WALKING //TODO MAKE SETTABLE
     }, function(response, status) {
       if (status === google.maps.DirectionsStatus.OK) {
         directionsDisplay.setDirections(response);
