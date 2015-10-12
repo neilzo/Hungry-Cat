@@ -7,121 +7,68 @@
   var businessMarkers = [];
   var infoWindow;
   var bizData;
+  var bizLocation;
 
   /* APP INIT */
-  function initialize() {
-    console.log('working!');
-    getUserLocation();
-  }
-  
   window.initMap = function() {
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: 40.7127, lng: -73.935242},
-      zoom: 15    
-    });
-    infoWindow = new google.maps.InfoWindow({ //eslint-disable-line
-      content: 'DIS YOU'
-    });
+    window.directionsService = new google.maps.DirectionsService;
+    window.directionsDisplay = new google.maps.DirectionsRenderer;
 
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-
-      var houseIcon = {
-        url: '../public/house2.png',
-        size: new google.maps.Size(25, 25),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(0, 30)
-      };
-
-      var shape = {
-        coords: [1, 1, 1, 20, 18, 20, 18, 1],
-        type: 'poly'
-      };
-
-      var marker = new google.maps.Marker({
-        position: pos,
-        icon: houseIcon,
-        shape: shape,
-        map: map
-      });
-
-      marker.addListener('click', function() {
-        infoWindow.open(map, marker);
-      });
-      map.setCenter(pos);
-    }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
-  };
-
-  /* === METHODS === */
-  //get user location
-  function getUserLocation() {
-    var startPos;
     var geoOptions = {
       timeout: 10 * 1000,
       maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
     };
 
-    var geoSuccess = function(position) {
-      startPos = position;
-      userLat = startPos.coords.latitude;
-      userLon = startPos.coords.longitude;
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 40.7127, lng: -73.935242}, //center on NYC
+      zoom: 15    
+    });
 
-      //disable when ready
-      document.getElementById('feelinLucky').removeAttribute('disabled');
-    };
+    window.directionsDisplay.setMap(map);
 
-    var geoError = function(error) {
-        // error.code can be:
-        //   0: unknown error
-        //   1: permission denied
-        //   2: position unavailable (error response from location provider)
-        //   3: timed out
-      if (!error.code === 2) {
-        alert('Error getting yo location. Error code: ' + error.code);
-      }
-    };
+    infoWindow = new google.maps.InfoWindow({ //eslint-disable-line
+      content: 'DIS YOU'
+    });
 
-    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
-  }
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        userLat = position.coords.latitude;
+        userLon = position.coords.longitude;
+        var pos = {
+          lat: userLon,
+          lng: userLat
+        };
 
-  /* MAP METHODS */
-  function addMarkers(data) {
-    for (var i = 0; i < data.length; i++) { //eslint-disable-line
-      var marker = new google.maps.Marker({ //eslint-disable-line 
-        position: data[i].pos,
-        animation: google.maps.Animation.DROP
-      });
+        map.setCenter(pos);
 
-      marker.info = new google.maps.InfoWindow({
-        content: data[i].name
-      });
-
-      google.maps.event.addListener(marker, 'mouseover', function() {
-        this.info.open(map, this);
-      });
-      google.maps.event.addListener(marker, 'mouseout', function() {
-        this.info.close(map, marker);
-      });
-
-      businessMarkers.push(marker);
+        document.getElementById('feelinLucky').removeAttribute('disabled');
+      }, function() {
+        handleLocationError(true, infoWindow, map.getCenter());
+      }, geoOptions);
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, infoWindow, map.getCenter());
     }
-    setMapOnAll(map);
   };
 
-  function setMapOnAll(map) {
-    for (var i = 0; i < businessMarkers.length; i++) {
-      businessMarkers[i].setMap(map);
-    }
-  }
+  /* === METHODS === */
 
-  function removeMarkers() {
-    setMapOnAll(null);
-    businessMarkers = [];
+  /* MAP METHODS */
+
+  function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+    directionsService.route({
+      origin: {lat: userLat, lng: userLon},
+      destination: {lat: bizLocation.lat, lng: bizLocation.lng},
+      travelMode: google.maps.TravelMode.WALKING
+    }, function(response, status) {
+      if (status === google.maps.DirectionsStatus.OK) {
+        console.log(response);
+        directionsDisplay.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
   }
 
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -140,10 +87,11 @@
     pos.lng = data.location.coordinate.longitude;
     
     biz.pos = pos;
+    bizLocation = pos;
     biz.name = data.name;
 
     businessLocations.push(biz);
-    addMarkers(businessLocations);
+    calculateAndDisplayRoute(window.directionsService, window.directionsDisplay);
   }
 
   /* FOOD DECIDER METHODS */
@@ -223,7 +171,7 @@
 
   //if all results have been shown, query to find additional, else format prexisting data
   function reRoll(refresh) {
-    //removeMarkers(); //remove existing markers
+    removeMarkers(); //remove existing markers
     if (refresh === 'refresh') {
       offset += 20; //increase global offset to grab more results
       var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
@@ -330,6 +278,4 @@
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
   document.getElementById('again').addEventListener('click', reRoll);
 
-  /* START THE DANG THING */
-  initialize();
 })();

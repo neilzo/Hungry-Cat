@@ -57,6 +57,7 @@
       //sort: 1 sorts by distance    
       yelp.search({term: 'food', sort: 1, ll: ll, offset: offset}, function(error, data) {
         if (error) {
+          res.status(400);
           res.send({
             message: 'There was an error searching Yelp.',
             error: error
@@ -67,8 +68,9 @@
       });
     } else {
       //sort: 1 sorts by distance    
-      yelp.search({term: 'food', sort: 1, ll: ll}, function(error, data) {
+      yelp.search({term: 'food', qsort: 1, ll: ll}, function(error, data) {
         if (error) {
+          res.status(400);
           res.send({
             message: 'There was an error searching Yelp.',
             error: error
