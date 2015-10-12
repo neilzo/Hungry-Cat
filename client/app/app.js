@@ -59,6 +59,39 @@
   };
   */
 
+  /* === METHODS === */
+  //get user location
+  function getUserLocation() {
+    var startPos;
+    var geoOptions = {
+      timeout: 10 * 1000,
+      maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
+    };
+
+    var geoSuccess = function(position) {
+      startPos = position;
+      userLat = startPos.coords.latitude;
+      userLon = startPos.coords.longitude;
+
+      //disable when ready
+      document.getElementById('feelinLucky').removeAttribute('disabled');
+    };
+
+    var geoError = function(error) {
+        // error.code can be:
+        //   0: unknown error
+        //   1: permission denied
+        //   2: position unavailable (error response from location provider)
+        //   3: timed out
+      if (!error.code === 2) {
+        alert('Error getting yo location. Error code: ' + error.code);
+      }
+    };
+
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
+  }
+
+  /* MAP METHODS */
   function addMarkers(data) {
     for (var i = 0; i < data.length; i++) { //eslint-disable-line
       var marker = new google.maps.Marker({ //eslint-disable-line 
@@ -93,38 +126,6 @@
     businessMarkers = [];
   }
 
-
-  /* METHODS */
-  function getUserLocation() {
-    var startPos;
-    var geoOptions = {
-      timeout: 10 * 1000,
-      maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
-    };
-
-    var geoSuccess = function(position) {
-      startPos = position;
-      userLat = startPos.coords.latitude;
-      userLon = startPos.coords.longitude;
-
-      //disable when ready
-      document.getElementById('feelinLucky').removeAttribute('disabled');
-    };
-
-    var geoError = function(error) {
-        // error.code can be:
-        //   0: unknown error
-        //   1: permission denied
-        //   2: position unavailable (error response from location provider)
-        //   3: timed out
-      if (!error.code === 2) {
-        alert('Error getting yo location. Error code: ' + error.code);
-      }
-    };
-
-    navigator.geolocation.getCurrentPosition(geoSuccess, geoError, geoOptions);
-  }
-
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
     infoWindow.setContent(browserHasGeolocation ?
@@ -132,6 +133,27 @@
       'Error: Your browser doesn\'t support geolocation.');
   }
 
+  function mapYoDigs(data) {
+    var businessLocations = [];
+    for (var i = 0; i < data.length; i++) { //eslint-disable-line
+      var biz = {};
+      var pos = {}; //eslint-disable-line
+
+      pos.lat = data[i].location.coordinate.latitude;
+      pos.lng = data[i].location.coordinate.longitude;
+      
+      biz.pos = pos;
+
+      biz.name = data[i].name;
+
+      businessLocations.push(biz);
+    }
+    addMarkers(businessLocations);
+  }
+
+  /* FOOD DECIDER METHODS */
+
+  //the kick off, calls ajax for local results, transitions between state 1 & 2
   function findFoodLucky() {
     var url;
 
@@ -204,6 +226,7 @@
     result.appendChild(businessWrap); //append business
   }
 
+  //if all results have been shown, query to find additional, else format prexisting data
   function reRoll(refresh) {
     //removeMarkers(); //remove existing markers
     if (refresh === 'refresh') {
@@ -216,24 +239,12 @@
     }
   }
 
-  function mapYoDigs(data) {
-    var businessLocations = [];
-    for (var i = 0; i < data.length; i++) { //eslint-disable-line
-      var biz = {};
-      var pos = {}; //eslint-disable-line
-
-      pos.lat = data[i].location.coordinate.latitude;
-      pos.lng = data[i].location.coordinate.longitude;
-      
-      biz.pos = pos;
-
-      biz.name = data[i].name;
-
-      businessLocations.push(biz);
-    }
-    addMarkers(businessLocations);
-  }
-
+  //grab a higher quality biz thumbnail
+  //examples of type:
+  //ms: 100 x 100
+  //ls: 250 x 250
+  //348s: 348 x 348
+  //o: up to 1000 x 1000
   function setYelpImg(url, type) {
     var extension = type + '.jpg';
     var regex = /[^/]*$/;
@@ -241,10 +252,12 @@
     return url.replace(regex, extension);
   }
 
+  //test if element has been shown to user
   function allShown(element) {
     return element.shown;
   }
 
+  //selects a random business, from the given response data
   function selectBiz(data) {
     var random = Math.floor(Math.random() * data.businesses.length);
     var chosenOne;
@@ -256,7 +269,7 @@
         reRoll('refresh');
       } else {
         console.log('shown, trying again');
-        return selectBiz(bizData); //OH BOY RECURSION
+        return selectBiz(data); //OH BOY RECURSION
       }
     }
 
@@ -265,6 +278,7 @@
     return chosenOne;
   }
 
+  //returns a single business' categories and formats it
   function getBizCategories(biz) {
     var catString = '';
     
@@ -279,10 +293,12 @@
     return catString;
   }
 
+  //returns a single business' address and formats it
   function getBizAddress(biz) {
     return biz.location.display_address[0] + ', ' + biz.location.display_address[2];
   }
 
+  //Vanilla js ajax
   function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
     var data;
@@ -312,6 +328,8 @@
 
     request.send();
   }
+
+  /* === END METHODS === */
 
   /* EVENT LISTENERS */
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
