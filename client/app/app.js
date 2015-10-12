@@ -154,9 +154,12 @@
       businessesReview,
       businessImage,
       businessName,
-      name,
+      businessLink,
+      businessReviewCount,
       result = document.getElementById('results'),
-      biz = selectBiz(data); //select biz. TODO: move this to a better place
+      biz = selectBiz(data),
+      businessTypes,
+      businessCats = getBizCategories(biz); //select biz. TODO: move this to a better place
 
     console.log(biz);
 
@@ -169,14 +172,28 @@
 
     businessesReview = document.createElement('img');
     businessesReview.setAttribute('src', biz.rating_img_url);
+
+    businessReviewCount = document.createElement('p');
+    businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
     
     businessName = document.createElement('p');
-    name = document.createTextNode(biz.name);
-    businessName.appendChild(name);
+    businessName.setAttribute('class', 'business-name');
+    businessName.textContent = biz.name;
+
+    businessLink = document.createElement('a');
+    businessLink.textContent = 'View on Yelp';
+    businessLink.setAttribute('href', biz.url);
+    businessLink.setAttribute('target', '_blank');
+
+    businessTypes = document.createElement('p');
+    businessTypes.textContent = 'Categories: ' + businessCats;
 
     businessWrap.appendChild(businessImage);
-    businessWrap.appendChild(businessesReview);
     businessWrap.appendChild(businessName);
+    businessWrap.appendChild(businessTypes);
+    businessWrap.appendChild(businessLink);
+    businessWrap.appendChild(businessesReview);
+    businessWrap.appendChild(businessReviewCount);
 
     result.innerHTML = ''; //clear result wrap
     result.appendChild(businessWrap); //append business
@@ -224,11 +241,24 @@
     return data.businesses[random];
   }
 
+  function getBizCategories(biz) {
+    var catString = '';
+    for (var i = 0; i < biz.categories.length; i++) {
+      if (biz.categories.length === 1 || i === biz.categories.length - 1) {
+        catString += biz.categories[i][0];
+      } else {
+        catString += biz.categories[i][0] + ', ';
+      }
+    };
+
+    return catString;
+  }
+
   function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
     var data;
 
-    console.log('AJAX REQUST!');
+    console.log('AJAX REQUEST!');
 
     request.open('GET', url, true);
     document.getElementById('results').innerHTML = 'LOADING...';
