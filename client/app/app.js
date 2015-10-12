@@ -4,15 +4,16 @@
   var userLon;
   var offset = 0; //grab more results from yelp, since they limit a response to 20 businesses
   var map;
-  var businessMarkers = [];
   var infoWindow;
   var bizData;
   var bizLocation;
+  var businessMarkers = [];
 
   /* APP INIT */
   window.initMap = function() {
+    //cries, TODO: make this not on window
     window.directionsService = new google.maps.DirectionsService;
-    window.directionsDisplay = new google.maps.DirectionsRenderer; //cries, TODO: make this not on window
+    window.directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true}); //custom icons
 
     var geoOptions = {
       timeout: 10 * 1000,
@@ -23,6 +24,21 @@
       center: {lat: 40.7127, lng: -73.935242}, //center on NYC
       zoom: 15    
     });
+
+    window.icons = {
+      start: {
+        url: '../public/happysammich30x30.png',
+        size: new google.maps.Size(30, 30),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 30)
+      },
+      end: {
+        url: '../public/happysammich30x30.png',
+        size: new google.maps.Size(30, 30),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 30)
+      }
+    };
 
     window.directionsDisplay.setMap(map);
 
@@ -63,12 +79,34 @@
       travelMode: google.maps.TravelMode.WALKING
     }, function(response, status) {
       if (status === google.maps.DirectionsStatus.OK) {
-        console.log(response);
         directionsDisplay.setDirections(response);
+        var leg = response.routes[ 0 ].legs[ 0 ];
+        makeMarker(leg.start_location, window.icons.start);
+        makeMarker(leg.end_location, window.icons.end);
+        setMapOnAll(map);
       } else {
         window.alert('Directions request failed due to ' + status);
       }
     });
+  }
+
+  function makeMarker(position, icon) {
+    var marker = new google.maps.Marker({
+      position: position,
+      icon: icon
+    });
+    businessMarkers.push(marker);
+  }
+
+  function setMapOnAll(map) {
+    for (var i = 0; i < businessMarkers.length; i++) {
+      businessMarkers[i].setMap(map);
+    }
+  }
+
+  function removeMarkers() {
+    setMapOnAll(null);
+    businessMarkers = [];
   }
 
   function handleLocationError(browserHasGeolocation, infoWindow, pos) {
@@ -106,7 +144,7 @@
 
     url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
 
-    //removeMarkers(); //remove existing markers
+    removeMarkers(); //remove existing markers
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
     maiAJAXGet(url);
