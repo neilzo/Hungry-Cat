@@ -14,11 +14,10 @@
     getUserLocation();
   }
   
-  /*
   window.initMap = function() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7127, lng: -73.935242},
-      zoom: 15
+      zoom: 15    
     });
     infoWindow = new google.maps.InfoWindow({ //eslint-disable-line
       content: 'DIS YOU'
@@ -57,7 +56,6 @@
       handleLocationError(true, infoWindow, map.getCenter());
     });
   };
-  */
 
   /* === METHODS === */
   //get user location
@@ -135,19 +133,16 @@
 
   function mapYoDigs(data) {
     var businessLocations = [];
-    for (var i = 0; i < data.length; i++) { //eslint-disable-line
-      var biz = {};
-      var pos = {}; //eslint-disable-line
+    var biz = {};
+    var pos = {};
 
-      pos.lat = data[i].location.coordinate.latitude;
-      pos.lng = data[i].location.coordinate.longitude;
-      
-      biz.pos = pos;
+    pos.lat = data.location.coordinate.latitude;
+    pos.lng = data.location.coordinate.longitude;
+    
+    biz.pos = pos;
+    biz.name = data.name;
 
-      biz.name = data[i].name;
-
-      businessLocations.push(biz);
-    }
+    businessLocations.push(biz);
     addMarkers(businessLocations);
   }
 
@@ -274,6 +269,7 @@
     }
 
     chosenOne = data.businesses[random];
+    mapYoDigs(chosenOne);
     chosenOne.shown = true; //is this the best way? no, but i'm gonna try it
     return chosenOne;
   }
@@ -314,7 +310,6 @@
         data = JSON.parse(request.responseText);
         bizData = data; //store so we can flag which results were already seen, go back, etc.
         formatResults(bizData); 
-        //mapYoDigs(data.businesses);
       } else {
         // We reached our target server, but it returned an error
         alert(request.responseText);
