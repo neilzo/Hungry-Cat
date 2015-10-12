@@ -3,17 +3,18 @@
   var userLat;
   var userLon;
   var offset = 0; //grab more results from yelp, since they limit a response to 20 businesses
-  var isLucky = false;
   var map;
   var businessMarkers = [];
   var infoWindow;
+  var bizData;
 
   /* APP INIT */
   function initialize() {
     console.log('working!');
     getUserLocation();
   }
-
+  
+  /*
   window.initMap = function() {
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7127, lng: -73.935242},
@@ -56,6 +57,7 @@
       handleLocationError(true, infoWindow, map.getCenter());
     });
   };
+  */
 
   function addMarkers(data) {
     for (var i = 0; i < data.length; i++) { //eslint-disable-line
@@ -130,26 +132,6 @@
       'Error: Your browser doesn\'t support geolocation.');
   }
 
-  function findFood(event) {
-    var term = encodeURIComponent(document.getElementById('term').value);
-    var location = encodeURIComponent(document.getElementById('location').value);
-    var url;
-
-    event.preventDefault();
-
-    //initial validation
-    if (!term || !location) {
-      alert('Enter your requirements, fool!');
-      return;
-    }
-
-    url = '/api/search?=' + term + '&location=' + location;
-
-    removeMarkers(); //remove existing markers
-    maiAJAXGet(url);
-    isLucky = false; //keep track of state, of sorts
-  }
-
   function findFoodLucky() {
     var url;
 
@@ -161,11 +143,10 @@
 
     url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
 
-    removeMarkers(); //remove existing markers
+    //removeMarkers(); //remove existing markers
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
     maiAJAXGet(url);
-    isLucky = true; //keep track of state, of sorts
   }
 
   function formatResults(data) {
@@ -174,85 +155,42 @@
       businessImage,
       businessName,
       name,
-      i,
-      bizAll = [];
+      result = document.getElementById('results'),
+      biz = selectBiz(data); //select biz. TODO: move this to a better place
+
+    console.log(biz);
+
+    businessWrap = document.createElement('div');
+    businessWrap.setAttribute('class', 'food-card animate');
+
+    businessImage = document.createElement('img');
+    businessImage.setAttribute('class', 'main-img');
+    businessImage.setAttribute('src', setYelpImg(biz.image_url, 'ls'));
+
+    businessesReview = document.createElement('img');
+    businessesReview.setAttribute('src', biz.rating_img_url);
     
-    for (i = 0; i < data.businesses.length; i++) {
-      businessWrap = document.createElement('div');
-      businessWrap.setAttribute('class', 'food-card animate');
+    businessName = document.createElement('p');
+    name = document.createTextNode(biz.name);
+    businessName.appendChild(name);
 
-      businessImage = document.createElement('img');
-      businessImage.setAttribute('class', 'main-img');
-      businessImage.setAttribute('src', setYelpImg(data.businesses[i].image_url, 'ls'));
+    businessWrap.appendChild(businessImage);
+    businessWrap.appendChild(businessesReview);
+    businessWrap.appendChild(businessName);
 
-      businessesReview = document.createElement('img');
-      businessesReview.setAttribute('src', data.businesses[i].rating_img_url);
-      
-      businessName = document.createElement('p');
-      name = document.createTextNode(data.businesses[i].name);
-      businessName.appendChild(name);
-
-      businessWrap.appendChild(businessImage);
-      businessWrap.appendChild(businessesReview);
-      businessWrap.appendChild(businessName);
-
-      bizAll.push(businessWrap);
-    }
-    addToGrid(bizAll);
+    result.innerHTML = ''; //clear result wrap
+    result.appendChild(businessWrap); //append business
   }
 
-  function addToGrid(bizArr) {
-    var results = document.getElementById('results');
-    var temp = document.createElement('div'); //holder for all grid items
-
-    for (var i = 0; i < bizArr.length; i++) {
-      bizArr[i].style.animationDelay = (i * 0.1 + 0.2) + 's'; //stagger animation in of each element
-      temp.appendChild(bizArr[i]);
-    }
-
-    results.innerHTML = ''; //clear div for results
-    //manage btn states
-    if (offset === 0) {
-      document.getElementById('btn-wrap').classList.remove('hide');
-      document.getElementById('back').classList.add('hide');
-    } else {
-      document.getElementById('btn-wrap').classList.remove('hide');
-      document.getElementById('back').classList.remove('hide');
-    }
-    results.appendChild(temp); //append all cards to dom
-  }
-
-  function getMore() {
+  function reRoll() {
     var url;
-    var term = encodeURIComponent(document.getElementById('term').value);
-    var location = encodeURIComponent(document.getElementById('location').value);
     offset += 20; //increase global offset to grab more results
     
-    removeMarkers(); //remove existing markers
+    //removeMarkers(); //remove existing markers
 
-    if (isLucky) {
-      url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
-    } else {
-      url = '/api/search?=' + term + '&location=' + location + '&offset=' + offset;
-    }
+    //maiAJAXGet(url);
 
-    maiAJAXGet(url);
-  }
-
-  function goBack() {
-    var url;
-    offset -= 20;
-
-    removeMarkers(); //remove exiting markers
-
-    if (isLucky) {
-      url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
-    } else {
-      //noop for now
-      // url = '/api/search?=' + term + '&location=' + location + '&offset=' + offset;
-    }
-
-    maiAJAXGet(url);
+    formatResults(bizData);
   }
 
   function mapYoDigs(data) {
@@ -280,21 +218,28 @@
     return url.replace(regex, extension);
   }
 
+  function selectBiz(data) {
+    var random = Math.floor(Math.random() * data.businesses.length);
+
+    return data.businesses[random];
+  }
+
   function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
     var data;
 
+    console.log('AJAX REQUST!');
+
     request.open('GET', url, true);
-    document.getElementById('btn-wrap').classList.add('hide');
     document.getElementById('results').innerHTML = 'LOADING...';
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
         data = JSON.parse(request.responseText);
-        console.log(data);
+        bizData = data;
         formatResults(data);
-        mapYoDigs(data.businesses);
+        //mapYoDigs(data.businesses);
       } else {
         // We reached our target server, but it returned an error
         alert(request.responseText);
@@ -311,9 +256,7 @@
 
   /* EVENT LISTENERS */
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
-  document.getElementById('search').addEventListener('submit', findFood);
-  document.getElementById('more').addEventListener('click', getMore);
-  document.getElementById('back').addEventListener('click', goBack);
+  document.getElementById('again').addEventListener('click', reRoll);
 
   /* START THE DANG THING */
   initialize();
