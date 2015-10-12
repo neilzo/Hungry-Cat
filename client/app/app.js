@@ -12,7 +12,7 @@
   /* APP INIT */
   window.initMap = function() {
     window.directionsService = new google.maps.DirectionsService;
-    window.directionsDisplay = new google.maps.DirectionsRenderer;
+    window.directionsDisplay = new google.maps.DirectionsRenderer; //cries, TODO: make this not on window
 
     var geoOptions = {
       timeout: 10 * 1000,
@@ -79,7 +79,6 @@
   }
 
   function mapYoDigs(data) {
-    var businessLocations = [];
     var biz = {};
     var pos = {};
 
@@ -90,7 +89,6 @@
     bizLocation = pos;
     biz.name = data.name;
 
-    businessLocations.push(biz);
     calculateAndDisplayRoute(window.directionsService, window.directionsDisplay);
   }
 
