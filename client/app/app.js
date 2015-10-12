@@ -159,7 +159,9 @@
       result = document.getElementById('results'),
       biz = selectBiz(data),
       businessTypes,
-      businessCats = getBizCategories(biz); //select biz. TODO: move this to a better place
+      businessCats = getBizCategories(biz),
+      businessAddress,
+      businessAddressString = getBizAddress(biz);
 
     console.log(biz);
 
@@ -188,8 +190,12 @@
     businessTypes = document.createElement('p');
     businessTypes.textContent = 'Categories: ' + businessCats;
 
+    businessAddress = document.createElement('p');
+    businessAddress.textContent = 'Address: ' + businessAddressString;
+
     businessWrap.appendChild(businessImage);
     businessWrap.appendChild(businessName);
+    businessWrap.appendChild(businessAddress);
     businessWrap.appendChild(businessTypes);
     businessWrap.appendChild(businessLink);
     businessWrap.appendChild(businessesReview);
@@ -252,6 +258,10 @@
     };
 
     return catString;
+  }
+
+  function getBizAddress(biz) {
+    return biz.location.display_address[0] + ', ' + biz.location.display_address[2];
   }
 
   function maiAJAXGet(url) {    
