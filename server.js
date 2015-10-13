@@ -68,7 +68,7 @@
       });
     } else {
       //sort: 1 sorts by distance    
-      yelp.search({term: 'food', qsort: 1, ll: ll, radius: radius}, function(error, data) {
+      yelp.search({term: 'food', sort: 1, ll: ll, radius: radius}, function(error, data) {
         if (error) {
           res.status(400);
           res.send({

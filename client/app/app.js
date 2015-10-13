@@ -166,7 +166,6 @@
 
     url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
 
-    removeMarkers(); //remove existing markers
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
     maiAJAXGet(url);
@@ -233,7 +232,6 @@
     if (refresh === 'refresh') {
       offset += 20; //increase global offset to grab more results
       var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
-
       maiAJAXGet(url);
     } else {
       formatResults(bizData);
@@ -315,7 +313,7 @@
         // Success!
         data = JSON.parse(request.responseText);
         bizData = data; //store so we can flag which results were already seen, go back, etc.
-        formatResults(bizData); 
+        formatResults(bizData);
       } else {
         // We reached our target server, but it returned an error
         alert(request.responseText);
