@@ -4,11 +4,19 @@
   background-color: transparent;
   border: none;
   padding: 10px 15px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .btn-action {
   color: #fff;
   background-color: @color-action;
+
+  &:disabled {
+    background-color: desaturate(@color-action, 30%);
+  }
 }
 
 .food-card {

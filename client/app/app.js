@@ -59,12 +59,12 @@
         map.setCenter(pos);
 
         document.getElementById('feelinLucky').removeAttribute('disabled');
-      }, function() {
-        handleLocationError(true, infoWindow, map.getCenter());
+      }, function(err) {
+        handleLocationError(err, true, infoWindow, map.getCenter());
       }, geoOptions);
     } else {
       // Browser doesn't support Geolocation
-      handleLocationError(false, infoWindow, map.getCenter());
+      handleLocationError(err, false, infoWindow, map.getCenter());
     }
   };
 
@@ -109,11 +109,15 @@
     businessMarkers = [];
   }
 
-  function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-      'Error: The Geolocation service failed.' :
-      'Error: Your browser doesn\'t support geolocation.');
+  function handleLocationError(err, browserHasGeolocation, infoWindow, pos) {
+    if (err.code === 1) {
+      document.getElementById('header').innerHTML = '<h1>Sorry, this app requires your location to work.';
+    } else {
+      infoWindow.setPosition(pos);
+      browserHasGeolocation ?
+      alert('Error: The Geolocation service failed.') :
+      alert('Error: Your browser doesn\'t support geolocation.');
+    }
   }
 
   function mapYoDigs(data) {
