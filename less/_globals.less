@@ -11,7 +11,7 @@ html {
 body {
   //height: 100%;
   font-size: 1.6rem;
-  background: url('bg.jpg') center center;
+  //background: url('bg.jpg') center center;
   background-repeat: no-repeat;
   background-size: cover;
 
@@ -35,6 +35,17 @@ h1, h2, h3, h4, h5, h6 {
 p {
   margin-top: 0;
   margin-bottom: 1rem;
+}
+
+.page-bgs {
+  img {
+    position: absolute;
+    top:0;
+    left: 0;
+    z-index: @z--1;
+    width: 100vw;
+    height: 100vh;
+  }
 }
 
 .main-content {

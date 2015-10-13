@@ -16,7 +16,6 @@
 
   router.use(function(req, res, next) {
     //console.log('happenings!');
-
     next();
   });
 
