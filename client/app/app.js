@@ -84,6 +84,7 @@
         makeMarker(leg.start_location, window.icons.start);
         makeMarker(leg.end_location, window.icons.end);
         setMapOnAll(map);
+        document.getElementById('tripDetails').innerHTML = ''; //clear trip details wrap on each selection
         displayTripDetails(leg.distance.text, leg.duration.text);
       } else {
         window.alert('Directions request failed due to ' + status);
