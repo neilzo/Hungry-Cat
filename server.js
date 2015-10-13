@@ -52,10 +52,11 @@
   router.route('/lucky').get(function(req, res) {
     var ll = req.query.lat + ',' + req.query.lon;
     var offset = req.query.offset;
+    var radius = 1609.34; //1 mile in meters
 
     if (offset) {
       //sort: 1 sorts by distance    
-      yelp.search({term: 'food', sort: 1, ll: ll, offset: offset}, function(error, data) {
+      yelp.search({term: 'food', sort: 1, ll: ll, radius: radius, offset: offset}, function(error, data) {
         if (error) {
           res.status(400);
           res.send({
@@ -68,7 +69,7 @@
       });
     } else {
       //sort: 1 sorts by distance    
-      yelp.search({term: 'food', qsort: 1, ll: ll}, function(error, data) {
+      yelp.search({term: 'food', qsort: 1, ll: ll, radius: radius}, function(error, data) {
         if (error) {
           res.status(400);
           res.send({

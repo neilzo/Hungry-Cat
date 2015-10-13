@@ -80,10 +80,11 @@
     }, function(response, status) {
       if (status === google.maps.DirectionsStatus.OK) {
         directionsDisplay.setDirections(response);
-        var leg = response.routes[ 0 ].legs[ 0 ];
+        var leg = response.routes[0].legs[0];
         makeMarker(leg.start_location, window.icons.start);
         makeMarker(leg.end_location, window.icons.end);
         setMapOnAll(map);
+        displayTripDetails(leg.distance.text, leg.duration.text);
       } else {
         window.alert('Directions request failed due to ' + status);
       }
@@ -132,6 +133,22 @@
     biz.name = data.name;
 
     calculateAndDisplayRoute(window.directionsService, window.directionsDisplay);
+  }
+
+  function displayTripDetails(distance, duration) {
+    var tripWrap = document.createElement('div');
+    tripWrap.setAttribute('class', 'trip-wrap');
+
+    var tripDistance = document.createElement('p');
+    tripDistance.textContent = 'Distance: ' + distance;
+
+    var tripTime = document.createElement('p');
+    tripTime.textContent = 'Est. Time: ' + duration;
+
+    tripWrap.appendChild(tripDistance);
+    tripWrap.appendChild(tripTime);
+
+    document.getElementById('tripDetails').appendChild(tripWrap);
   }
 
   /* FOOD DECIDER METHODS */

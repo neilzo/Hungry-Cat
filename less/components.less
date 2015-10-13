@@ -15,7 +15,7 @@
   background-color: @color-action;
 
   &:disabled {
-    background-color: desaturate(@color-action, 30%);
+    background-color: desaturate(@color-action, 20%);
   }
 }
 
@@ -27,10 +27,20 @@
     font-size: 2rem;
     font-weight: bold;
   }
+  
+  a {
+    display: block; //link to yelp page
+    margin-bottom: 1rem;
+  }
+
   .main-img {
     width: 100%;
     background-size: cover;
   }
+}
+
+.trip-details-wrap {
+  font-size: 1.4rem;
 }
 
 .fadeout {
