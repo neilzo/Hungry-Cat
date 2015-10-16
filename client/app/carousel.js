@@ -1,22 +1,24 @@
 (function() {
   'use strict';
+  var index = 0;
+  var images = document.getElementById('carousel').children;
+  var slideTime = 5000; //5s
+
+  function reset() {
+    for (var i = 1; i < images.length; i++) {
+      images[i].style.opacity = 0;
+    };
+  }
 
   function carousel() {
-    var carouselWrap = document.getElementById('carousel');
-
-    //fade(carouselWrap.children[2]);
+    index++;
+    if (index >= images.length) {
+      reset();
+      index = 0;
+    }
+    images[index].style.opacity = 1;
   }
 
-  function fade(el) {
-    el.style.opacity = 1;
-    // var interval = setInterval(function() {
-    //   el.style.opacity -= .01;
-
-    //   if(el.style.opacity < 0) {
-    //     clearInterval(interval);
-    //   }
-    // }, 100);
-  }
-
-  carousel();
+  reset();
+  setInterval(carousel, slideTime);
 })();
