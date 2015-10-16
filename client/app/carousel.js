@@ -19,6 +19,6 @@
     images[index].style.opacity = 1;
   }
 
-  reset();
-  setInterval(carousel, slideTime);
+  // reset();
+  // setInterval(carousel, slideTime);
 })();
