@@ -3,3 +3,5 @@ node_modules
 
 client/public/core.css
 client/public/core.css.map
+
+client/app/app.min.js

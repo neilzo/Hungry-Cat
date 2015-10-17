@@ -14,10 +14,12 @@
     root: './client',
     html: './client/**/*.html',
     scripts: './client/app/**/*.js',
+    app: './client/app/app.js',
     styles: './client/public/*.css'
   };
 
   gulp.task('default', $.sequence('inject', 'server', 'watch-less', 'watch'));
+  gulp.task('js', minifyJS);
   gulp.task('watch-less', watchLess);
   gulp.task('server', watchServer);
   gulp.task('watch', startWatch);
@@ -38,6 +40,16 @@
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest('./client/public'));
   });
+
+  function minifyJS() {
+    return gulp.src(paths.app)
+      .pipe($.uglify())
+      .pipe($.rename('app.min.js'))
+      .pipe(gulp.dest('./client/app'))
+      .once('end', function() {
+        process.exit();
+      });
+  }
 
   function watchLess() {
     return gulp.watch('./less/**/*.less', ['less']);
