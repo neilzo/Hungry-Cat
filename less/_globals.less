@@ -9,9 +9,7 @@ html {
 }
 
 body {
-  //height: 100%;
   font-size: 1.6rem;
-  //background: url('bg.jpg') center center;
   background-repeat: no-repeat;
   background-size: cover;
 
@@ -46,6 +44,7 @@ p {
     z-index: @z--1;
     width: 100vw;
     height: 100vh;
+    transform: translate3d(0,0,0);
     object-fit: cover;
 
     &:nth-child(1) {
@@ -72,15 +71,18 @@ p {
   height: 0; //for animation
 }
 
-.left-col,
-.right-col {
-  width: 50%;
-  display: inline-block;
-  vertical-align: top;
-}
-
 .results {
   font-size: 1.4rem;
+}
+
+.left-col,
+.right-col {
+  @media @tablet {
+    width: 50%;
+    font-size: 0;
+    vertical-align: top;
+    display: inline-block;
+  }
 }
 
 .map {
