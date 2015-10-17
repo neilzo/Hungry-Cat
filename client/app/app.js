@@ -1,4 +1,4 @@
-(function() {
+(function(window, document, undefined) {
   'use strict';
   var userLat;
   var userLon;
@@ -8,6 +8,20 @@
   var bizData;
   var bizLocation;
   var businessMarkers = [];
+  var icons = {
+    start: {
+      url: '../public/hungrygato.png',
+      size: new google.maps.Size(30, 30),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(0, 30)
+    },
+    end: {
+      url: '../public/happysammich30x30.png',
+      size: new google.maps.Size(30, 30),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(0, 30)
+    }
+  };
 
   /* APP INIT */
   window.initMap = function() {
@@ -24,21 +38,6 @@
       center: {lat: 40.7127, lng: -73.935242}, //center on NYC
       zoom: 15    
     });
-
-    window.icons = {
-      start: {
-        url: '../public/hungrygato.png',
-        size: new google.maps.Size(30, 30),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(0, 30)
-      },
-      end: {
-        url: '../public/happysammich30x30.png',
-        size: new google.maps.Size(30, 30),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(0, 30)
-      }
-    };
 
     window.directionsDisplay.setMap(map);
 
@@ -81,8 +80,8 @@
       if (status === google.maps.DirectionsStatus.OK) {
         directionsDisplay.setDirections(response);
         var leg = response.routes[0].legs[0];
-        makeMarker(leg.start_location, window.icons.start);
-        makeMarker(leg.end_location, window.icons.end);
+        makeMarker(leg.start_location, icons.start);
+        makeMarker(leg.end_location, icons.end);
         setMapOnAll(map);
         document.getElementById('tripDetails').innerHTML = ''; //clear trip details wrap on each selection
         displayTripDetails(leg.distance.text, leg.duration.text);
@@ -334,4 +333,4 @@
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
   document.getElementById('again').addEventListener('click', reRoll);
 
-})();
+})(window, document);
