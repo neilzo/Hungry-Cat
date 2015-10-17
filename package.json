@@ -1,13 +1,13 @@
 {
-  "name": "demo",
+  "name": "foodDecider",
   "version": "0.0.0",
-  "description": "",
+  "description": "Free will is a lie.",
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "gulp"
   },
-  "author": "",
+  "author": "Neil Daftary",
   "license": "ISC",
   "devDependencies": {
     "babel-eslint": "^4.1.3",
