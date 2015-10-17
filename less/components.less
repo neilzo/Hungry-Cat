@@ -4,27 +4,48 @@
   background-color: transparent;
   border: none;
   padding: 10px 15px;
+  outline: none;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .btn-action {
   color: #fff;
   background-color: @color-action;
+
+  &:disabled {
+    background-color: desaturate(@color-action, 20%);
+  }
 }
 
 .food-card {
-  display: inline-block;
-  width: 50%;
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  
+  .business-name {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  a {
+    display: block; //link to yelp page
+    margin-bottom: 1rem;
+  }
 
   .main-img {
     width: 100%;
-    background-size: cover;
-  }
-  &:last-child {
-    margin-right: 0;
   }
 }
 
+.trip-details-wrap {
+  font-size: 1.4rem;
+}
+
 .fadeout {
+  opacity: 1;
   animation: fadeOut 0.3s ease-in-out forwards;
 }
 

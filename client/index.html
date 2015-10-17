@@ -1,13 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta>
+  <meta name="description" content="Free will is a lie.">
+  <meta name="author" content="Neil Daftary">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Food Decider</title>
 
+  <!-- ICONS -->
+  <link rel="apple-touch-icon" href="public/favicons/apple-icon-120x120.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="public/favicons/android-icon-96x96.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="public/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="public/favicons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="public/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="public/favicons/favicon.ico">
+
   <!-- FONTS -->
-<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
   
   <!-- inject:css -->
   <link rel="stylesheet" href="public/core.css">
@@ -16,21 +29,19 @@
 </head>
 <body>
 
+  <div id="carousel" class="page-bgs">
+    <img src="public/bg.jpg" alt="bg 1">
+    <img src="public/bg2.jpg" alt="bg 2">
+    <img src="public/bg3.jpg" alt="bg 3">
+    <img src="public/bg4.jpg" alt="bg 4">
+  </div>
+
   <div class="page-wrap">
     
     <div id="header" class="container header">
       
       <h1 class="header-text">Hungry and indecisive?</h1>
       <h3 class="header-subtext">Click the button to see how far the rabbit hole goes...</h3>
-      <form id="search" class="hide">
-        <label for="term">Term:</label>
-        <input type="text" id="term">
-
-        <label for="location">Location:</label>
-        <input type="text" id="location">
-
-        <button type="submit">Find foods!</button>
-      </form>
 
       <button id="feelinLucky" class="btn btn-action" disabled>Ya feeling lucky, punk?</button>
 
@@ -41,16 +52,14 @@
       <div class="loader"></div>
 
       <div class="left-col">
-        <div id="btn-wrap" class="btn-wrap hide">
-          <button id="back" class="btn btn-action"> < Back</button>
-          <button id="more" class="btn btn-action">MORE! ></button>
-        </div>
+        <button id="again" class="btn btn-action">I DON'T LIKE THIS</button>
 
         <div id="results" class="results grid effect"></div>
       </div>
 
       <div class="right-col">
           <div id="map" class="map"></div>
+          <div id="tripDetails" class="trip-details-wrap"></div>
       </div>
 
     </div>

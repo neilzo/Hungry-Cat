@@ -16,7 +16,6 @@
 
   router.use(function(req, res, next) {
     //console.log('happenings!');
-
     next();
   });
 
@@ -52,23 +51,29 @@
   router.route('/lucky').get(function(req, res) {
     var ll = req.query.lat + ',' + req.query.lon;
     var offset = req.query.offset;
+    var radius = 1609.34; //1 mile in meters
 
-    //sucky
     if (offset) {
-      yelp.search({term: 'food', ll: ll, offset: offset}, function(error, data) {
+      //sort: 1 sorts by distance    
+      yelp.search({term: 'food', sort: 1, ll: ll, radius: radius, offset: offset}, function(error, data) {
         if (error) {
+          res.status(400);
           res.send({
-            message: 'There was an error searching Yelp.'
+            message: 'There was an error searching Yelp.',
+            error: error
           });
         } else {
           res.send(data);
         }
       });
     } else {
-      yelp.search({term: 'food', ll: ll}, function(error, data) {
+      //sort: 1 sorts by distance    
+      yelp.search({term: 'food', sort: 1, ll: ll, radius: radius}, function(error, data) {
         if (error) {
+          res.status(400);
           res.send({
-            message: 'There was an error searching Yelp.'
+            message: 'There was an error searching Yelp.',
+            error: error
           });
         } else {
           res.send(data);

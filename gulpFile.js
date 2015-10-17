@@ -47,7 +47,7 @@
     nodemon({
       script: 'server.js', 
       ext: 'js',
-      ignore: ['app.js'],
+      watch: ['server.js'],
       env: { 'NODE_ENV': 'development' }
     });
   }

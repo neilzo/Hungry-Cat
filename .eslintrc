@@ -11,7 +11,6 @@
   "rules": {
     // Tons of rules you can use, for example...
     "no-new-object": 2,
-    "no-reserved-keys": 2,
     "no-array-constructor": 2,
     "quotes": [2, "single"],
     "indent": [2, 2],
@@ -26,7 +25,6 @@
     "use-isnan": 2,
     "no-eq-null": 2,
     "brace-style": 2,
-    "spaced-line-comment": 2,
     "valid-jsdoc": 2,
     "space-infix-ops": 2,
     "eol-last": 2,
@@ -38,9 +36,7 @@
     "semi-spacing": 2,
     "no-extra-boolean-cast": 2,
     "space-before-function-paren": [2, "never"],
-    "no-spaced-func": 2,
-    "no-wrap-func": 2,
-    "camelcase": 2,
+    "camelcase": 1,
     "new-cap": 2,
     "consistent-this": [1, "_this"],
     "key-spacing": 2,
