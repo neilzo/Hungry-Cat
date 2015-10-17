@@ -1,4 +1,4 @@
-(function(window, document, undefined) {
+(function(window, document) {
   'use strict';
   var userLat;
   var userLon;
@@ -8,20 +8,6 @@
   var bizData;
   var bizLocation;
   var businessMarkers = [];
-  var icons = {
-    start: {
-      url: '../public/hungrygato.png',
-      size: new google.maps.Size(30, 30),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(0, 30)
-    },
-    end: {
-      url: '../public/happysammich30x30.png',
-      size: new google.maps.Size(30, 30),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(0, 30)
-    }
-  };
 
   /* APP INIT */
   window.initMap = function() {
@@ -32,6 +18,21 @@
     var geoOptions = {
       timeout: 10 * 1000,
       maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
+    };
+
+    window.icons = {
+      start: {
+        url: '../public/hungrygato.png',
+        size: new google.maps.Size(30, 30),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 30)
+      },
+      end: {
+        url: '../public/happysammich30x30.png',
+        size: new google.maps.Size(30, 30),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 30)
+      }
     };
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -80,8 +81,8 @@
       if (status === google.maps.DirectionsStatus.OK) {
         directionsDisplay.setDirections(response);
         var leg = response.routes[0].legs[0];
-        makeMarker(leg.start_location, icons.start);
-        makeMarker(leg.end_location, icons.end);
+        makeMarker(leg.start_location, window.icons.start);
+        makeMarker(leg.end_location, window.icons.end);
         setMapOnAll(map);
         document.getElementById('tripDetails').innerHTML = ''; //clear trip details wrap on each selection
         displayTripDetails(leg.distance.text, leg.duration.text);
