@@ -5,3 +5,4 @@ client/public/core.css
 client/public/core.css.map
 
 client/app/app.min.js
+client/public/core.min.css

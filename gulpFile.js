@@ -5,6 +5,7 @@
   var sourcemaps = require('gulp-sourcemaps');
   var notify = require('gulp-notify');
   var autoprefixer = require('gulp-autoprefixer');
+  var minifyCss = require('gulp-minify-css');
 
   $.livereload();
   $.livereload.listen();
@@ -20,6 +21,7 @@
 
   gulp.task('default', $.sequence('inject', 'server', 'watch-less', 'watch'));
   gulp.task('js', minifyJS);
+  gulp.task('css', minifyCSS);
   gulp.task('watch-less', watchLess);
   gulp.task('server', watchServer);
   gulp.task('watch', startWatch);
@@ -40,6 +42,16 @@
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest('./client/public'));
   });
+
+  function minifyCSS() {
+    return gulp.src(paths.styles)
+      .pipe(minifyCss())
+      .pipe($.rename('core.min.css'))
+      .pipe(gulp.dest('./client/public'))
+      .once('end', function() {
+        process.exit();
+      });
+  }
 
   function minifyJS() {
     return gulp.src(paths.app)
