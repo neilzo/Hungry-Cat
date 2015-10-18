@@ -87,7 +87,7 @@
         document.getElementById('tripDetails').innerHTML = ''; //clear trip details wrap on each selection
         displayTripDetails(leg.distance.text, leg.duration.text);
       } else {
-        window.alert('Directions request failed due to ' + status);
+        alrt('Directions request failed due to ' + status);
       }
     });
   }
@@ -117,8 +117,8 @@
     } else {
       infoWindow.setPosition(pos);
       browserHasGeolocation ?
-      alert('Error: The Geolocation service failed.') :
-      alert('Error: Your browser doesn\'t support geolocation.');
+      alrt('Error: The Geolocation service failed.') :
+      alrt('Error: Your browser doesn\'t support geolocation.');
     }
   }
 
@@ -160,7 +160,7 @@
 
     //just to be safe
     if (!userLat && !userLon) {
-      alert('coordinates not ready. try again.');
+      alrt('Coordinates not ready. Try again.');
       return;
     }
 
@@ -169,6 +169,28 @@
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
     maiAJAXGet(url);
+  }
+
+  function alrt(errorText) {
+    var alertsWrap = document.getElementById('alerts');
+    var alert = document.createElement('div');
+    var close = document.createElement('span');
+    alert.setAttribute('class', 'alert');
+    close.setAttribute('class', 'close');
+    close.addEventListener('click', closeAlert);
+
+    alert.textContent = errorText;
+
+    close.textContent = 'X';
+    alert.appendChild(close);
+
+    alertsWrap.appendChild(alert);
+  }
+
+  function closeAlert(e) {
+    document.getElementById('alerts').removeChild(e.target.parentNode);
+    
+    return;
   }
 
   //this is becoming a beast, TODO: find a better way
@@ -316,13 +338,14 @@
         formatResults(bizData);
       } else {
         // We reached our target server, but it returned an error
-        alert(request.responseText);
+        alrt('There was an internal server error, try again later.');
+        console.debug(request.responseText);
       }
     };
 
     request.onerror = function() {
       // There was a connection error of some sort
-      alert('Error sending your request');
+      alrt('Error sending your request');
     };
 
     request.send();
