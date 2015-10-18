@@ -69,10 +69,16 @@ p {
   overflow-x: hidden;
   overflow-y: scroll;
   height: 0; //for animation
+  transform: translate3d(0,0,0);
+
+  &.container {
+    margin-top: 2.5vh;
+  }
 }
 
 .results {
   font-size: 1.4rem;
+  padding-top: 2rem;
 }
 
 .left-col,

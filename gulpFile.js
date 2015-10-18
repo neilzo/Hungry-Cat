@@ -72,7 +72,7 @@
 
   function startInject() {
     var target = gulp.src( paths.index );
-    var scripts = gulp.src( paths.scripts, {read: false} );
+    var scripts = gulp.src( paths.app, {read: false} );
     var styles = gulp.src( paths.styles, {read: false} );
 
     return target
