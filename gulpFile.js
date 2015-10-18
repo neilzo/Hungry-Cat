@@ -38,10 +38,7 @@
         cascade: false
       }))
       .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest('./client/public'))
-      .once('end', function() {
-        process.exit();
-      });
+      .pipe(gulp.dest('./client/public'));
   });
 
   function minifyJS() {
