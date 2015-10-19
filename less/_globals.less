@@ -65,11 +65,15 @@ p {
 .main-content {
   font-size: 0;
   background-color: #fff;
-  max-height: 95vh;
-  overflow-x: hidden;
-  overflow-y: scroll;
   height: 0; //for animation
   transform: translate3d(0,0,0);
+  overflow: auto;
+
+  @media @desktop {
+    max-height: 95vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
 
   &.container {
     margin-top: 2.5vh;
