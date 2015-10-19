@@ -1,6 +1,6 @@
 {
   "name": "foodDecider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Free will is a lie.",
   "main": "",
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "gulp"
   },
   "author": "Neil Daftary",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "connect-livereload": "^0.5.0",
     "gulp": "^3.8.8",
