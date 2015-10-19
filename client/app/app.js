@@ -59,6 +59,7 @@
         map.setCenter(pos);
 
         document.getElementById('feelinLucky').removeAttribute('disabled');
+        document.getElementById('feelinLucky').innerHTML = 'You feeling lucky, punk?';
       }, function(err) {
         handleLocationError(err, true, infoWindow, map.getCenter());
       }, geoOptions);
