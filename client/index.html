@@ -24,6 +24,7 @@
   
   <!-- inject:css -->
   <link rel="stylesheet" href="public/core.css">
+  <link rel="stylesheet" href="public/core.min.css">
   <!-- endinject -->
 
   <!-- PROD CSS -->
@@ -34,10 +35,10 @@
 <body>
 
   <div id="carousel" class="page-bgs">
-    <img src="public/bg.jpg" alt="bg 1">
-    <img src="public/bg2.jpg" alt="bg 2">
-    <img src="public/bg3.jpg" alt="bg 3">
-    <img src="public/bg4.jpg" alt="bg 4">
+    <img src="public/bg.jpg" srcset="public/bg-m.jpg 767w, public/bg.jpg 4000w" alt="bg 1">
+    <img src="public/bg2.jpg" srcset="public/bg2-m.jpg 767w, public/bg2-m.jpg 4000w" alt="bg 2">
+    <img src="public/bg3.jpg" srcset="public/bg3-m.jpg 767w, public/bg3-m.jpg 4000w" alt="bg 3">
+    <img src="public/bg4.jpg" srcset="public/bg4-m.jpg 767w, public/bg4-m.jpg 4000w" alt="bg 4">
   </div>
 
   <div id="alerts"></div>
