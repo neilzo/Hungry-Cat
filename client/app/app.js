@@ -42,10 +42,6 @@
 
     window.directionsDisplay.setMap(map);
 
-    infoWindow = new google.maps.InfoWindow({ //eslint-disable-line
-      content: 'DIS YOU'
-    });
-
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
@@ -141,12 +137,16 @@
     var tripWrap = document.createElement('div');
     tripWrap.setAttribute('class', 'trip-wrap');
 
-    var tripDistance = document.createElement('p');
+    var tripHeader = document.createElement('h4');
+    tripHeader.textContent = 'Trip Details:';
+
+    var tripDistance = document.createElement('span');
     tripDistance.textContent = 'Distance: ' + distance;
 
-    var tripTime = document.createElement('p');
+    var tripTime = document.createElement('span');
     tripTime.textContent = 'Est. Time: ' + duration;
 
+    tripWrap.appendChild(tripHeader);
     tripWrap.appendChild(tripDistance);
     tripWrap.appendChild(tripTime);
 
@@ -169,6 +169,10 @@
 
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
+    if (window.innerWidth < 768) {
+      document.getElementById('carousel').innerHTML = ''; //hide rotating images on mobile after main action click
+      document.body.classList.remove('overlay');
+    }
     maiAJAXGet(url);
   }
 

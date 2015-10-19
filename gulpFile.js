@@ -16,7 +16,7 @@
     html: './client/**/*.html',
     scripts: './client/app/**/*.js',
     app: './client/app/app.js',
-    styles: './client/public/*.css'
+    styles: './client/public/core.css'
   };
 
   gulp.task('default', $.sequence('inject', 'server', 'watch-less', 'watch'));
