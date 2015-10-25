@@ -8,6 +8,7 @@
   var bizData;
   var bizLocation;
   var businessMarkers = [];
+  var loader = '<div class="loader"><span class="loader-item"></span><span class="loader-item"></span><span class="loader-item"></span></div>';
 
   /* APP INIT */
   window.initMap = function() {
@@ -333,7 +334,7 @@
     console.log('AJAX REQUEST!');
 
     request.open('GET', url, true);
-    document.getElementById('results').innerHTML = 'LOADING...';
+    document.getElementById('results').innerHTML = loader;
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
