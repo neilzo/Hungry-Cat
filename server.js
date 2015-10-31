@@ -25,10 +25,12 @@
   });
 
   router.route('/delivery').get(function(req, res) {
-    var lat = req.query.lat;
-    var lon = req.query.lon;
+    var lat = req.query.latitude;
+    var lon = req.query.longitude;
 
-    https.get('https://api.delivery.com/merchant/search/delivery', function(request) {
+    var url = 'https://api.delivery.com/merchant/search/delivery?client_id=' + deliveryId + '&latitude=' + lat + '&longitude=' + lon; 
+
+    https.get(url, function(request) {
       request.on('data', function(d) {
         res.send(d);
       });

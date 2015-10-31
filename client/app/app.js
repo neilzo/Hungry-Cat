@@ -49,10 +49,10 @@
         userLat = position.coords.latitude;
         userLon = position.coords.longitude;
         var pos = {
-          lat: userLon,
-          lng: userLat
+          lat: userLat,
+          lng: userLon
         };
-
+        
         map.setCenter(pos);
 
         document.getElementById('feelinLucky').removeAttribute('disabled');
