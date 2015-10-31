@@ -24,14 +24,14 @@
     next();
   });
 
-  router.route('/delivery').get(function(req, res) {
-    var lat = req.query.latitude;
-    var lon = req.query.longitude;
+  router.route('/delivery').get(function(req, res, next) {
+    var lat = req.query.lat;
+    var lon = req.query.lon;
 
     var url = 'https://api.delivery.com/merchant/search/delivery?client_id=' + deliveryId + '&latitude=' + lat + '&longitude=' + lon; 
 
     https.get(url, function(request) {
-      request.on('data', function(d) {
+      request.once('data', function(d) {
         res.send(d);
       });
     }).on('error', function(e) {

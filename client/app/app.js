@@ -52,11 +52,13 @@
           lat: userLat,
           lng: userLon
         };
-        
+
         map.setCenter(pos);
 
         document.getElementById('feelinLucky').removeAttribute('disabled');
-        document.getElementById('feelinLucky').innerHTML = 'You feeling lucky, punk?';
+        document.getElementById('feelinLucky').innerHTML = 'Dine out?';
+        document.getElementById('feelinDelivery').removeAttribute('disabled');
+        document.getElementById('feelinDelivery').innerHTML = 'Dine in?';
       }, function(err) {
         handleLocationError(err, true, infoWindow, map.getCenter());
       }, geoOptions);
@@ -167,6 +169,20 @@
     }
 
     url = '/api/lucky?lat=' + userLat + '&lon=' + userLon;
+
+    document.getElementById('header').classList.add('fadeout');
+    document.getElementById('main').classList.add('fadein');
+    if (window.innerWidth < 768) {
+      document.getElementById('carousel').innerHTML = ''; //hide rotating images on mobile after main action click
+      document.body.classList.remove('overlay');
+    }
+    maiAJAXGet(url);
+  }
+
+  function findFoodDelivery() {
+    var url = '/api/delivery?lat=' + userLat + '&lon=' + userLon;
+
+    console.log(url);
 
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
@@ -339,9 +355,10 @@
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        data = JSON.parse(request.responseText);
-        bizData = data; //store so we can flag which results were already seen, go back, etc.
-        formatResults(bizData);
+        // data = JSON.parse(request.responseText);
+        // bizData = data; //store so we can flag which results were already seen, go back, etc.
+        // formatResults(bizData);
+        console.log(request.responseText);
       } else {
         // We reached our target server, but it returned an error
         alrt('There was an internal server error, try again later.');
@@ -361,6 +378,7 @@
 
   /* EVENT LISTENERS */
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
+  document.getElementById('feelinDelivery').addEventListener('click', findFoodDelivery);
   document.getElementById('again').addEventListener('click', reRoll);
 
 })(window, document);
