@@ -24,7 +24,7 @@
     next();
   });
 
-  router.route('/delivery').get(function(req, res, next) {
+  router.route('/delivery').get(function(req, res) {
     var lat = req.query.lat;
     var lon = req.query.lon;
 
@@ -39,7 +39,7 @@
     });
   });
 
-  router.route('/search').get(function(req, res){
+  router.route('/search').get(function(req, res) {
     var term = req.query.term;
     var location = req.query.location;
     var offset = req.query.offset;
@@ -107,5 +107,4 @@
   app.use(express.static('./client'));
 
   app.listen(9000);
-
 })();
