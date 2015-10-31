@@ -1,11 +1,16 @@
 (function(){
   'use strict';
   var express = require('express');
+  var https = require('https');
   //var reloader = require('connect-livereload');
   var app = express();
+  var oAuth = require('oauth');
   var config = require('./secrets');
 
   var router = express.Router();
+
+  var deliveryId = config.delivery.client_id;
+  var deliverySecret = config.delivery.secret;
 
   var yelp = require('yelp').createClient({
     consumer_key: config.yelp.consumer_key,
@@ -17,6 +22,19 @@
   router.use(function(req, res, next) {
     //console.log('happenings!');
     next();
+  });
+
+  router.route('/delivery').get(function(req, res) {
+    var lat = req.query.lat;
+    var lon = req.query.lon;
+
+    https.get('https://api.delivery.com/merchant/search/delivery', function(request) {
+      request.on('data', function(d) {
+        res.send(d);
+      });
+    }).on('error', function(e) {
+      res.send(e);
+    });
   });
 
   router.route('/search').get(function(req, res){
