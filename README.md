@@ -2,4 +2,4 @@
 
 Isometric. Beautiful. Ridiculously fast. No FE dependencies. Vanilla JS. Node. The Future.
 
-http://spaceowl.co
+http://hc.spaceowl.co
