@@ -182,8 +182,6 @@
   function findFoodDelivery() {
     var url = '/api/delivery?lat=' + userLat + '&lon=' + userLon;
 
-    console.log(url);
-
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
     if (window.innerWidth < 768) {
@@ -271,7 +269,11 @@
   }
 
   function formatDelivery(data) {
-    console.log(selectBiz(data));
+    var biz = selectBiz(data);
+    var businessCats = getBizCategories(biz);
+    var businessAddressString = getBizAddress(biz);
+
+    console.log(biz, businessCats, businessAddressString);
   }
 
   //if all results have been shown, query to find additional, else format prexisting data
@@ -307,7 +309,6 @@
   //selects a random business, from the given response data
   function selectBiz(data) {
     var datum = data.businesses ? data.businesses : data.merchants;
-    console.log(datum);
     var random = Math.floor(Math.random() * datum.length);
     var chosenOne;
 
@@ -331,12 +332,22 @@
   //returns a single business' categories and formats it
   function getBizCategories(biz) {
     var catString = '';
-    
-    for (var i = 0; i < biz.categories.length; i++) {
-      if (biz.categories.length === 1 || i === biz.categories.length - 1) {
-        catString += biz.categories[i][0];
+    var datum = biz.categories ? biz.categories : biz.summary.cuisines;
+
+    for (var i = 0; i < datum.length; i++) {
+      // ._.
+      if (datum === biz.categories) {   
+        if (datum.length === 1 || i === datum.length - 1) {
+          catString += datum[i][0];
+        } else {
+          catString += datum[i][0] + ', ';
+        }
       } else {
-        catString += biz.categories[i][0] + ', ';
+        if (datum.length === 1 || i === datum.length - 1) {
+          catString += datum[i];
+        } else {
+          catString += datum[i] + ', ';
+        }
       }
     };
 
@@ -345,7 +356,13 @@
 
   //returns a single business' address and formats it
   function getBizAddress(biz) {
-    return biz.location.display_address[0] + ', ' + biz.location.display_address[2];
+    if (biz.location.display_address) {
+      //yelp
+      return biz.location.display_address[0] + ', ' + biz.location.display_address[2];
+    } else {
+      //delivery
+      return biz.location.street + ', ' + biz.location.city + ' ' + biz.location.state + ' ' + biz.location.zip;
+    }
   }
 
   //Vanilla js ajax
