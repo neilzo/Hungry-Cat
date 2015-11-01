@@ -270,6 +270,10 @@
     result.appendChild(businessWrap); //append business
   }
 
+  function formatDelivery(data) {
+    console.log(selectBiz(data));
+  }
+
   //if all results have been shown, query to find additional, else format prexisting data
   function reRoll(refresh) {
     removeMarkers(); //remove existing markers
@@ -302,22 +306,24 @@
 
   //selects a random business, from the given response data
   function selectBiz(data) {
-    var random = Math.floor(Math.random() * data.businesses.length);
+    var datum = data.businesses ? data.businesses : data.merchants;
+    console.log(datum);
+    var random = Math.floor(Math.random() * datum.length);
     var chosenOne;
 
     //if all shown, query for more, else try to find unshown in current data
-    if (data.businesses[random].shown) {
-      if (data.businesses.every(allShown)) {
+    if (datum[random].shown) {
+      if (datum.every(allShown)) {
         console.log('SHOWN ALL, REQUESTING MORE!');
         reRoll('refresh');
       } else {
         console.log('shown, trying again');
-        return selectBiz(data); //OH BOY RECURSION
+        return selectBiz(datum); //OH BOY RECURSION
       }
     }
 
-    chosenOne = data.businesses[random];
-    mapYoDigs(chosenOne);
+    chosenOne = datum[random];
+    //mapYoDigs(chosenOne);
     chosenOne.shown = true; //is this the best way? no, but i'm gonna try it
     return chosenOne;
   }
@@ -358,7 +364,10 @@
         // data = JSON.parse(request.responseText);
         // bizData = data; //store so we can flag which results were already seen, go back, etc.
         // formatResults(bizData);
-        console.log(request.responseText);
+
+        data = JSON.parse(request.responseText);
+        bizData = data;
+        formatDelivery(bizData);
       } else {
         // We reached our target server, but it returned an error
         alrt('There was an internal server error, try again later.');

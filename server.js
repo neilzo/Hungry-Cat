@@ -24,15 +24,19 @@
     next();
   });
 
-  router.route('/delivery').get(function(req, res) {
+  router.route('/delivery').get(function(req, res, next) {
     var lat = req.query.lat;
     var lon = req.query.lon;
+    var body = '';
 
-    var url = 'https://api.delivery.com/merchant/search/delivery?client_id=' + deliveryId + '&latitude=' + lat + '&longitude=' + lon; 
+    var url = 'https://api.delivery.com/merchant/search/delivery?client_id=' + deliveryId + '&latitude=' + lat + '&longitude=' + lon + '&merchant_type=R'; 
 
     https.get(url, function(request) {
-      request.once('data', function(d) {
-        res.send(d);
+      request.on('data', function(chunk) {
+        body += chunk;
+      })
+      .on('end', function() {
+        res.send(body);
       });
     }).on('error', function(e) {
       res.send(e);
