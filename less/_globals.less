@@ -10,8 +10,6 @@ html {
 
 body {
   font-size: 1.6rem;
-  background-repeat: no-repeat;
-  background-size: cover;
   background-color: darkgrey;
 
   &.overlay:after {
@@ -22,7 +20,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: @z--1;
   }
 }
@@ -39,7 +37,7 @@ p {
 
 .page-bgs {
   //display: flex;
-  img {
+  div {
     position: absolute;
     top:0;
     left: 0;
@@ -47,19 +45,22 @@ p {
     width: 100vw;
     height: 100vh;
     transform: translate3d(0,0,0);
-    object-fit: cover;
+    background-size: cover;
+    background-position: center center;
 
-    &:nth-child(1) {
-      animation: fadeCycle 24s 18s infinite;
-    }
-    &:nth-child(2) {
-      animation: fadeCycle 24s 12s infinite;
-    }
-    &:nth-child(3) {
-      animation: fadeCycle 24s 6s infinite;
-    }
-    &:nth-child(4) {
-      animation: fadeCycle 24s 0s infinite;
+    @media @tablet {
+      &:nth-child(1) {
+        animation: fadeCycle 24s 18s infinite;
+      }
+      &:nth-child(2) {
+        animation: fadeCycle 24s 12s infinite;
+      }
+      &:nth-child(3) {
+        animation: fadeCycle 24s 6s infinite;
+      }
+      &:nth-child(4) {
+        animation: fadeCycle 24s 0s infinite;
+      }
     }
   }
 }

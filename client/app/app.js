@@ -172,10 +172,6 @@
 
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
-    if (window.innerWidth < 768) {
-      document.getElementById('carousel').innerHTML = ''; //hide rotating images on mobile after main action click
-      document.body.classList.remove('overlay');
-    }
     maiAJAXGet(url);
   }
 
@@ -184,10 +180,6 @@
 
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
-    if (window.innerWidth < 768) {
-      document.getElementById('carousel').innerHTML = ''; //hide rotating images on mobile after main action click
-      document.body.classList.remove('overlay');
-    }
     maiAJAXGet(url);
   }
 
