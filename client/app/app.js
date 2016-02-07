@@ -228,7 +228,7 @@
     businessWrap.setAttribute('class', 'food-card animate');
 
     businessImage = document.createElement('img');
-    businessImage.setAttribute('class', 'main-img');
+    businessImage.setAttribute('class', 'main-img main-img-sml');
     businessImage.setAttribute('src', setYelpImg(biz.image_url, 'ls'));
 
     businessesReview = document.createElement('img');
@@ -279,6 +279,10 @@
     var min = '$' + biz.ordering.minimum;
     var specialties = formatSpecialties(biz);
     var estimate = biz.ordering.availability.delivery_estimate;
+    var url = '/api/search?term=' + biz.summary.name + '&lat=' + userLat + '&lon=' + userLon;
+    var yelpJams = ajaxData(url, function(data) {
+      console.log(data);
+    });
 
     businessWrap = document.createElement('div');
     businessWrap.setAttribute('class', 'food-card animate');
@@ -457,11 +461,42 @@
     request.send();
   }
 
+  //ajax that returns the data
+  function ajaxData(url, handleData) {    
+    var request = new XMLHttpRequest();
+
+    console.log('AJAX REQUEST!');
+
+    request.open('GET', url, true);
+    document.getElementById('results').innerHTML = loader;
+
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        // data = JSON.parse(request.responseText);
+        // bizData = data; //store so we can flag which results were already seen, go back, etc.
+        // formatResults(bizData);
+
+        handleData(JSON.parse(request.responseText));
+      } else {
+        // We reached our target server, but it returned an error
+        alrt('There was an internal server error, try again later.');
+        console.debug(request.responseText);
+      }
+    };
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+      alrt('Error sending your request');
+    };
+
+    request.send();
+  }
+
   /* === END METHODS === */
 
   /* EVENT LISTENERS */
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
   document.getElementById('feelinDelivery').addEventListener('click', findFoodDelivery);
   document.getElementById('again').addEventListener('click', reRoll);
-
 })(window, document);
