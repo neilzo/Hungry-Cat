@@ -329,6 +329,7 @@
   //if all results have been shown, query to find additional, else format prexisting data
   function reRoll(refresh) {
     removeMarkers(); //remove existing markers
+    document.getElementById('tip').remove();
     if (refresh === 'refresh') {
       offset += 20; //increase global offset to grab more results
       var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;

@@ -14,6 +14,7 @@
 .btn-action {
   color: #fff;
   background-color: @color-action;
+  box-shadow: rgba(0, 0, 0, 0.257647) 0px 1px 6px, rgba(0, 0, 0, 0.257647) 0px 1px 4px;
 
   &:disabled {
     background-color: desaturate(@color-action, 20%);
@@ -22,6 +23,27 @@
 
 #feelinLucky {
   margin-right: 4rem;
+}
+
+.tip {
+  font-size: 14px;
+  padding-left: 12px;
+  margin-left: 10px;
+  position: relative;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 0;
+    height: 0;
+    transform: translateX(-4px);
+    border-style: solid;
+    border-width: 7.5px 10px 7.5px 0;
+    border-color: transparent #007bff transparent transparent;
+    animation: LTR 1s ease-in-out infinite;
+  }
 }
 
 .food-card {
@@ -141,5 +163,13 @@
   } 40% { 
     transform: scale(1.0);
     opacity: 1;
+  }
+}
+
+@keyframes LTR {
+  0, 40%, 100% { 
+    transform: translateX(-4px);
+  }  40% { 
+    transform: translateX(0);
   }
 }
