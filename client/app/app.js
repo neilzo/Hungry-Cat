@@ -6,20 +6,43 @@
   var map;
   var infoWindow;
   var bizData;
+  var pos = {};
   var bizLocation;
   var businessMarkers = [];
   var loader = '<div class="loader"><span class="loader-item"></span><span class="loader-item"></span><span class="loader-item"></span></div>';
+
+  //get location on init
+  (function() {
+    var geoOptions = {
+      timeout: 10 * 1000,
+      maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
+    };
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        userLat = position.coords.latitude;
+        userLon = position.coords.longitude;
+        pos.lat = userLat;
+        pos.lng = userLon;
+
+        document.getElementById('feelinLucky').removeAttribute('disabled');
+        document.getElementById('feelinLucky').innerHTML = 'I want to dine out';
+        document.getElementById('feelinDelivery').removeAttribute('disabled');
+        document.getElementById('feelinDelivery').innerHTML = 'I want to dine in';
+      }, function(err) {
+        handleLocationError(err, true, infoWindow, map.getCenter());
+      }, geoOptions);
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(err, false, infoWindow, map.getCenter());
+    }
+  })();
 
   /* APP INIT */
   window.initMap = function() {
     //cries, TODO: make this not on window
     window.directionsService = new google.maps.DirectionsService;
     window.directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true}); //custom icons
-
-    var geoOptions = {
-      timeout: 10 * 1000,
-      maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
-    };
 
     window.icons = {
       start: {
@@ -43,29 +66,7 @@
 
     window.directionsDisplay.setMap(map);
 
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        userLat = position.coords.latitude;
-        userLon = position.coords.longitude;
-        var pos = {
-          lat: userLat,
-          lng: userLon
-        };
-
-        map.setCenter(pos);
-
-        document.getElementById('feelinLucky').removeAttribute('disabled');
-        document.getElementById('feelinLucky').innerHTML = 'I want to dine out';
-        document.getElementById('feelinDelivery').removeAttribute('disabled');
-        document.getElementById('feelinDelivery').innerHTML = 'I want to dine in';
-      }, function(err) {
-        handleLocationError(err, true, infoWindow, map.getCenter());
-      }, geoOptions);
-    } else {
-      // Browser doesn't support Geolocation
-      handleLocationError(err, false, infoWindow, map.getCenter());
-    }
+    map.setCenter(pos);
   };
 
   /* === METHODS === */
