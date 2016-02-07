@@ -56,9 +56,9 @@
         map.setCenter(pos);
 
         document.getElementById('feelinLucky').removeAttribute('disabled');
-        document.getElementById('feelinLucky').innerHTML = 'Dine out?';
+        document.getElementById('feelinLucky').innerHTML = 'I want to dine out';
         document.getElementById('feelinDelivery').removeAttribute('disabled');
-        document.getElementById('feelinDelivery').innerHTML = 'Dine in?';
+        document.getElementById('feelinDelivery').innerHTML = 'I want to dine in';
       }, function(err) {
         handleLocationError(err, true, infoWindow, map.getCenter());
       }, geoOptions);
@@ -178,6 +178,7 @@
   function findFoodDelivery() {
     var url = '/api/delivery?lat=' + userLat + '&lon=' + userLon;
 
+    document.getElementById('map').remove();
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
     maiAJAXGet(url);
@@ -261,11 +262,68 @@
   }
 
   function formatDelivery(data) {
+    var businessWrap,
+      businessImage,
+      businessName,
+      businessLink,
+      businessTypes,
+      businessSpecialties,
+      businessMin,
+      businessEstimate,
+      result = document.getElementById('results');
     var biz = selectBiz(data);
     var businessCats = getBizCategories(biz);
-    var businessAddressString = getBizAddress(biz);
+    var min = '$' + biz.ordering.minimum;
+    var specialties = formatSpecialties(biz);
+    var estimate = biz.ordering.availability.delivery_estimate;
 
-    console.log(biz, businessCats, businessAddressString);
+    businessWrap = document.createElement('div');
+    businessWrap.setAttribute('class', 'food-card animate');
+
+    businessImage = document.createElement('img');
+    businessImage.setAttribute('class', 'main-img');
+    businessImage.setAttribute('src', biz.summary.merchant_logo);
+    
+    businessName = document.createElement('p');
+    businessName.setAttribute('class', 'business-name');
+    businessName.textContent = biz.summary.name;
+
+    businessLink = document.createElement('a');
+    businessLink.textContent = 'View on Delivery.com';
+    businessLink.setAttribute('href', biz.summary.url.complete);
+    businessLink.setAttribute('target', '_blank');
+
+    businessTypes = document.createElement('p');
+    businessTypes.textContent = 'Categories: ' + businessCats;
+
+    businessMin = document.createElement('p');
+    businessMin.textContent = 'Delivery Min: ' + min;
+
+    businessSpecialties = document.createElement('p');
+    businessSpecialties.textContent = 'Top Dishes: ' + specialties;
+
+    businessEstimate = document.createElement('p');
+    businessEstimate.textContent = 'Delivery Est: ' + estimate;
+
+    businessWrap.appendChild(businessImage);
+    businessWrap.appendChild(businessName);
+    businessWrap.appendChild(businessTypes);
+    businessWrap.appendChild(businessLink);
+    businessWrap.appendChild(businessMin);
+    businessWrap.appendChild(businessSpecialties);
+    businessWrap.appendChild(businessEstimate);
+
+    result.innerHTML = ''; //clear result wrap
+    result.appendChild(businessWrap); //append business
+  }
+
+  function formatSpecialties(biz) {
+    var dishes = [];
+    var recItems = biz.summary.recommended_items;
+    for (var dish in recItems) {
+      dishes.push(recItems[dish].name);
+    }
+    return dishes.join(', ');
   }
 
   //if all results have been shown, query to find additional, else format prexisting data
@@ -309,6 +367,7 @@
       if (datum.every(allShown)) {
         console.log('SHOWN ALL, REQUESTING MORE!');
         reRoll('refresh');
+        return;
       } else {
         console.log('shown, trying again');
         return selectBiz(datum); //OH BOY RECURSION
@@ -348,13 +407,7 @@
 
   //returns a single business' address and formats it
   function getBizAddress(biz) {
-    if (biz.location.display_address) {
-      //yelp
-      return biz.location.display_address[0] + ', ' + biz.location.display_address[2];
-    } else {
-      //delivery
-      return biz.location.street + ', ' + biz.location.city + ' ' + biz.location.state + ' ' + biz.location.zip;
-    }
+    return biz.location.display_address[0] + ', ' + biz.location.display_address[2];
   }
 
   //Vanilla js ajax
