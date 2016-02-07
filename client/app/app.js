@@ -228,7 +228,7 @@
     businessWrap.setAttribute('class', 'food-card animate');
 
     businessImage = document.createElement('img');
-    businessImage.setAttribute('class', 'main-img main-img-sml');
+    businessImage.setAttribute('class', 'main-img');
     businessImage.setAttribute('src', setYelpImg(biz.image_url, 'ls'));
 
     businessesReview = document.createElement('img');
@@ -265,30 +265,49 @@
   }
 
   function formatDelivery(data) {
-    var businessWrap,
-      businessImage,
+    var businessImage,
       businessName,
       businessLink,
       businessTypes,
       businessSpecialties,
       businessMin,
       businessEstimate,
+      businessReview,
+      businessReviewCount,
+      yReviewNum,
+      yReview,
       result = document.getElementById('results');
+    var businessWrap = document.createElement('div');  
     var biz = selectBiz(data);
     var businessCats = getBizCategories(biz);
     var min = '$' + biz.ordering.minimum;
     var specialties = formatSpecialties(biz);
     var estimate = biz.ordering.availability.delivery_estimate;
     var url = '/api/search?term=' + biz.summary.name + '&lat=' + userLat + '&lon=' + userLon;
-    var yelpJams = ajaxData(url, function(data) {
-      console.log(data);
+    
+    ajaxData(url, function(data) {
+      if (data.businesses.length === 1) {
+        var biz = data.businesses[0];
+        yReview = biz.rating_img_url;
+        yReviewNum = biz.review_count;
+
+        businessReview = document.createElement('img');
+        businessReview.setAttribute('src', biz.rating_img_url);
+
+        businessReviewCount = document.createElement('p');
+        businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
+
+        businessWrap.appendChild(businessReview);
+        businessWrap.appendChild(businessReviewCount);
+      } else {
+        //noop, there is *probably* no corresponding Yelp page
+      } 
     });
 
-    businessWrap = document.createElement('div');
     businessWrap.setAttribute('class', 'food-card animate');
 
     businessImage = document.createElement('img');
-    businessImage.setAttribute('class', 'main-img');
+    businessImage.setAttribute('class', 'main-img main-img-sml');
     businessImage.setAttribute('src', biz.summary.merchant_logo);
     
     businessName = document.createElement('p');
