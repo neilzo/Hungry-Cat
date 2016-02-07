@@ -172,6 +172,7 @@
 
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
+    window.mode = 'yelp';
     maiAJAXGet(url);
   }
 
@@ -181,6 +182,7 @@
     document.getElementById('map').remove();
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
+    window.mode = 'delivery';
     maiAJAXGet(url);
   }
 
@@ -330,7 +332,7 @@
   function reRoll(refresh) {
     var tip = document.getElementById('tip');
     removeMarkers(); //remove existing markers
-    
+
     if (tip) {
       tip.remove();
     }
@@ -339,7 +341,11 @@
       var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
       maiAJAXGet(url);
     } else {
-      formatResults(bizData);
+      if (window.mode === 'yelp') {
+        formatResults(bizData);
+      } else {
+        formatDelivery(bizData);
+      }
     }
   }
 
