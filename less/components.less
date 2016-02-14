@@ -48,6 +48,22 @@
     border-color: transparent #007bff transparent transparent;
     animation: LTR 1s ease-in-out infinite;
   }
+
+  @media @phone-xs {
+    display: block;
+    text-align: center;
+    padding-left: 0;
+    margin-left: 0;
+    padding-top: 18px;
+    padding-right: 10px;
+
+    &:before {
+      transform: translateX(-4px) rotate(90deg);
+      animation: none;
+      left: 50%;
+      top: 6px;
+    }
+  }
 }
 
 .food-card {
@@ -107,6 +123,16 @@
     width: 35%;
     vertical-align: middle;
   }
+
+  @media @phone-xs {
+    text-align: center;
+    h4 {
+      display: none;
+    }
+    span:first-child {
+      margin-right: 15px;
+    }
+  }
 }
 
 .fadeout {
@@ -133,6 +159,7 @@
 
   h5 {
     width: 100%;
+    margin-top: 0;
     text-align: center;
   }
 

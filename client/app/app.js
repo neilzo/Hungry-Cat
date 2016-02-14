@@ -9,6 +9,7 @@
   var pos = {};
   var bizLocation;
   var businessMarkers = [];
+  var count = 0;
   var loader = '<div class="loader"><span class="loader-item"></span><span class="loader-item"></span><span class="loader-item"></span></div>';
 
   //get location on init
@@ -65,7 +66,9 @@
 
     window.directionsDisplay.setMap(map);
 
-    map.setCenter(pos);
+    if (window.mode === 'yelp') {
+      map.setCenter(pos);
+    }
   };
 
   /* === METHODS === */
@@ -358,9 +361,10 @@
     var tip = document.getElementById('tip');
     removeMarkers(); //remove existing markers
 
-    if (tip) {
-      tip.remove();
-    }
+    tip.innerHTML = '';
+    count++;
+    var message = generateMessage(count);
+    message ? tip.innerHTML = message : tip.innerHTML = 'Places skipped: ' + count;
     if (refresh === 'refresh') {
       offset += 20; //increase global offset to grab more results
       var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
@@ -372,6 +376,15 @@
         formatDelivery(bizData);
       }
     }
+  }
+
+  function generateMessage(count) {
+    var messages = ['','Ok...','Really?','Why are you even using this?','You\'re a lost cause. I\'m done.'];
+    if (count % 5 === 0 && count <= 20) {
+      return messages[count / 5];
+    }
+
+    return false;
   }
 
   //grab a higher quality biz thumbnail
@@ -392,6 +405,11 @@
     return element.shown;
   }
 
+  //test if element is not open for delivery
+  function allClosed(element) {
+    return element.ordering.is_open;
+  }
+
   //selects a random business, from the given response data
   function selectBiz(data) {
     var datum = data.businesses ? data.businesses : data.merchants;
@@ -400,7 +418,14 @@
 
     //don't show delivery options that aren't open
     if (datum === data.merchants && !datum[random].ordering.is_open) {
-      return selectBiz(data);
+      if (datum.every(allClosed) && datum.every(allShown)) {
+        var results = document.getElementById('results');
+        results.innerHTML = '';
+        results.innerHTML = 'Sorry, but it looks like there aren\'t any more places that deliver to you';
+        return;
+      } else {
+        //return selectBiz(data);
+      }
     }
 
     //if all shown, query for more, else try to find unshown in current data
@@ -416,7 +441,9 @@
     }
 
     chosenOne = datum[random];
-    //mapYoDigs(chosenOne);
+    if (window.mode === 'yelp') {
+      mapYoDigs(chosenOne);
+    }
     chosenOne.shown = true; //is this the best way? no, but i'm gonna try it
     return chosenOne;
   }
@@ -464,13 +491,13 @@
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        // data = JSON.parse(request.responseText);
-        // bizData = data; //store so we can flag which results were already seen, go back, etc.
-        // formatResults(bizData);
-
         data = JSON.parse(request.responseText);
         bizData = data;
-        formatDelivery(bizData);
+        if (window.mode === 'yelp') {
+          formatResults(bizData);
+        } else {
+          formatDelivery(bizData);
+        }
       } else {
         // We reached our target server, but it returned an error
         alrt('There was an internal server error, try again later.');
@@ -498,10 +525,6 @@
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         // Success!
-        // data = JSON.parse(request.responseText);
-        // bizData = data; //store so we can flag which results were already seen, go back, etc.
-        // formatResults(bizData);
-
         handleData(JSON.parse(request.responseText));
       } else {
         // We reached our target server, but it returned an error
