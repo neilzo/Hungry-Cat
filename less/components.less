@@ -23,6 +23,10 @@
 
 #feelinLucky {
   margin-right: 4rem;
+
+  @media @phone-xs {
+    margin-right: 2rem;
+  }
 }
 
 .tip {
@@ -121,6 +125,22 @@
   animation: scaleUp 0.65s ease-in-out forwards;
 }
 
+.ll-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  h5 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .loader {
+    padding: 0.5rem 0;
+  }
+}
+
 .loader {
   padding: 4rem 0;
 }
@@ -131,6 +151,7 @@
   opacity: 0;
   display: inline-block;
   background-color: #2980b9;
+  opacity: 0.25;
   border-radius: 50%;
   
   &:nth-child(3) {

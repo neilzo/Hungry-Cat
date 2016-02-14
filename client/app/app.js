@@ -25,10 +25,9 @@
         pos.lat = userLat;
         pos.lng = userLon;
 
+        document.getElementById('ll').remove();
         document.getElementById('feelinLucky').removeAttribute('disabled');
-        document.getElementById('feelinLucky').innerHTML = 'I want to dine out';
         document.getElementById('feelinDelivery').removeAttribute('disabled');
-        document.getElementById('feelinDelivery').innerHTML = 'I want to dine in';
       }, function(err) {
         handleLocationError(err, true, infoWindow, map.getCenter());
       }, geoOptions);
