@@ -1,16 +1,52 @@
 .delivery-view {
   text-align: center;
   
+  .header {
+    display: none;
+  }
   .main-content {
     display: inline-block;
     width: auto;
+    
+    @media @phone-xs {
+      width: 90%;
+    }
   }
   .left-col {
     min-height: 0;
     width: 100%;
     padding: 0 15px 15px 0;
+
+    @media @phone-xs {
+      padding-right: 0;
+    }
   }
   .results {
     margin-right: -15px;
-  }    
+
+    @media @phone-xs {
+      margin-right: 0;
+      padding: 10px 10px 0;
+    }
+  }
+  .tip {
+    @media @phone-xs {
+      display: block;
+      padding-left: 0;
+      margin-left: 0;
+      padding-top: 18px;
+
+      &:before {
+        transform: translateX(-4px) rotate(90deg);
+        animation: none;
+        left: 50%;
+        top: 6px;
+      }
+    }
+  }
+  .btn-action {
+    @media @phone-xs {
+      width: 100%;
+    }
+  } 
 }
