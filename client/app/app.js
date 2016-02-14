@@ -399,6 +399,9 @@
 
     //if all shown, query for more, else try to find unshown in current data
     if (datum[random].shown) {
+      if (datum === data.merchants && !datum[random].ordering.availability.delivery_supported) {
+        return selectBiz(datum);
+      }
       if (datum.every(allShown)) {
         console.log('SHOWN ALL, REQUESTING MORE!');
         reRoll('refresh');
@@ -480,7 +483,7 @@
     request.send();
   }
 
-  //ajax that returns the data
+  //ajax that returns the data async via callback
   function ajaxData(url, handleData) {    
     var request = new XMLHttpRequest();
 
