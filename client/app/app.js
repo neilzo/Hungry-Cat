@@ -288,14 +288,21 @@
     ajaxData(url, function(data) {
       if (data.businesses.length === 1) {
         var biz = data.businesses[0];
+        var yelpSuppImg = document.createElement('img');
         yReview = biz.rating_img_url;
         yReviewNum = biz.review_count;
+
+        yelpSuppImg.setAttribute('src', setYelpImg(biz.image_url, 'ls'));
 
         businessReview = document.createElement('img');
         businessReview.setAttribute('src', biz.rating_img_url);
 
         businessReviewCount = document.createElement('p');
         businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
+
+        var rightCol = document.getElementsByClassName('right-col')[0];
+        rightCol.innerHTML = '';
+        rightCol.appendChild(yelpSuppImg);
 
         businessWrap.appendChild(businessReview);
         businessWrap.appendChild(businessReviewCount);
@@ -397,18 +404,20 @@
     var random = Math.floor(Math.random() * datum.length);
     var chosenOne;
 
+    //don't show delivery options that aren't open
+    if (datum === data.merchants && !datum[random].ordering.is_open) {
+      return selectBiz(data);
+    }
+
     //if all shown, query for more, else try to find unshown in current data
     if (datum[random].shown) {
-      if (datum === data.merchants && !datum[random].ordering.availability.delivery_supported) {
-        return selectBiz(datum);
-      }
       if (datum.every(allShown)) {
         console.log('SHOWN ALL, REQUESTING MORE!');
         reRoll('refresh');
         return;
       } else {
         console.log('shown, trying again');
-        return selectBiz(datum); //OH BOY RECURSION
+        return selectBiz(data); //OH BOY RECURSION
       }
     }
 
