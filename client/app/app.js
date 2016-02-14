@@ -30,11 +30,11 @@
         document.getElementById('feelinLucky').removeAttribute('disabled');
         document.getElementById('feelinDelivery').removeAttribute('disabled');
       }, function(err) {
-        handleLocationError(err, true, infoWindow, map.getCenter());
+        handleLocationError(err, true);
       }, geoOptions);
     } else {
       // Browser doesn't support Geolocation
-      handleLocationError(err, false, infoWindow, map.getCenter());
+      handleLocationError(err, false);
     }
   })();
 
@@ -114,11 +114,10 @@
     businessMarkers = [];
   }
 
-  function handleLocationError(err, browserHasGeolocation, infoWindow, pos) {
+  function handleLocationError(err, browserHasGeolocation) {
     if (err.code === 1) {
       document.getElementById('header').innerHTML = '<h1>Sorry, this app requires your location to work.';
     } else {
-      infoWindow.setPosition(pos);
       browserHasGeolocation ?
       alrt('Error: The Geolocation service failed.') :
       alrt('Error: Your browser doesn\'t support geolocation.');
@@ -288,6 +287,11 @@
     var estimate = biz.ordering.availability.delivery_estimate;
     var url = '/api/search?term=' + biz.summary.name + '&lat=' + userLat + '&lon=' + userLon;
 
+    if (!biz) {
+      alert('NO MORE DELIVERY SRY!');
+      return;
+    }
+
     ajaxData(url, function(data) {
       if (data.businesses.length === 1) {
         var biz = data.businesses[0];
@@ -361,10 +365,11 @@
     var tip = document.getElementById('tip');
     removeMarkers(); //remove existing markers
 
+    tip.classList.add('not-intro');
     tip.innerHTML = '';
     count++;
     var message = generateMessage(count);
-    message ? tip.innerHTML = message : tip.innerHTML = 'Places skipped: ' + count;
+    message ? tip.innerHTML = 'Places skipped: ' + count + '. ' + message : tip.innerHTML = 'Places skipped: ' + count;
     if (refresh === 'refresh') {
       offset += 20; //increase global offset to grab more results
       var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
@@ -422,7 +427,7 @@
         var results = document.getElementById('results');
         results.innerHTML = '';
         results.innerHTML = 'Sorry, but it looks like there aren\'t any more places that deliver to you';
-        return;
+        return false;
       } else {
         //return selectBiz(data);
       }

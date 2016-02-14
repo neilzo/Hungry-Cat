@@ -13,7 +13,7 @@
     }
   }
   .left-col {
-    min-height: 460px;
+    min-height: 480px;
     width: 100%;
     padding: 0 0 15px 0;
 
@@ -22,9 +22,24 @@
     }
   }
   .results {
-    padding: 2rem 10px 0;
+    padding: 6rem 10px 0;
     @media @phone-xs {
+      padding-top: 2rem;
       margin-right: 0;
+    }
+  }
+  .btn-action {
+    float: left;
+    @media @phone-xs {
+      float: none;
+    }
+  }
+  .tip {
+    float: right;
+    margin-top: 10px;
+    @media @phone-xs {
+      margin-top: 0;
+      float: none;
     }
   }
 }

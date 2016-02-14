@@ -32,6 +32,7 @@
 .tip {
   font-size: 14px;
   padding-left: 12px;
+  padding-right: 15px;
   margin-left: 10px;
   position: relative;
   
@@ -47,6 +48,12 @@
     border-width: 7.5px 10px 7.5px 0;
     border-color: transparent #007bff transparent transparent;
     animation: LTR 1s ease-in-out infinite;
+  }
+
+  &.not-intro {
+    &:before {
+      display: none;
+    }
   }
 
   @media @phone-xs {
