@@ -181,6 +181,7 @@
     var url = '/api/delivery?lat=' + userLat + '&lon=' + userLon;
 
     document.getElementById('map').remove();
+    document.getElementsByClassName('page-wrap')[0].classList.add('delivery-view');
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
     window.mode = 'delivery';
@@ -284,15 +285,12 @@
     var specialties = formatSpecialties(biz);
     var estimate = biz.ordering.availability.delivery_estimate;
     var url = '/api/search?term=' + biz.summary.name + '&lat=' + userLat + '&lon=' + userLon;
-    
+
     ajaxData(url, function(data) {
       if (data.businesses.length === 1) {
         var biz = data.businesses[0];
-        var yelpSuppImg = document.createElement('img');
         yReview = biz.rating_img_url;
         yReviewNum = biz.review_count;
-
-        yelpSuppImg.setAttribute('src', setYelpImg(biz.image_url, 'ls'));
 
         businessReview = document.createElement('img');
         businessReview.setAttribute('src', biz.rating_img_url);
@@ -300,14 +298,11 @@
         businessReviewCount = document.createElement('p');
         businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
 
-        var rightCol = document.getElementsByClassName('right-col')[0];
-        rightCol.innerHTML = '';
-        rightCol.appendChild(yelpSuppImg);
-
         businessWrap.appendChild(businessReview);
         businessWrap.appendChild(businessReviewCount);
       } else {
         //noop, there is *probably* no corresponding Yelp page
+        businessReviewCount = 'There appears to be no corresponding Yelp page for this restaurant :(';
       } 
     });
 
