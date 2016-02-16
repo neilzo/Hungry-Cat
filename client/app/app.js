@@ -281,16 +281,17 @@
       result = document.getElementById('results');
     var businessWrap = document.createElement('div');  
     var biz = selectBiz(data);
+    
+    if (!biz) {
+      alert('NO MORE DELIVERY OPTIONS SRY!');
+      return;
+    }
+
     var businessCats = getBizCategories(biz);
     var min = '$' + biz.ordering.minimum;
     var specialties = formatSpecialties(biz);
     var estimate = biz.ordering.availability.delivery_estimate;
     var url = '/api/search?term=' + biz.summary.name + '&lat=' + userLat + '&lon=' + userLon;
-
-    if (!biz) {
-      alert('NO MORE DELIVERY SRY!');
-      return;
-    }
 
     ajaxData(url, function(data) {
       if (data.businesses.length === 1) {
@@ -417,28 +418,21 @@
 
   //selects a random business, from the given response data
   function selectBiz(data) {
-    var datum = data.businesses ? data.businesses : data.merchants;
+    var datum = data.businesses ? data.businesses : data;
     var random = Math.floor(Math.random() * datum.length);
     var chosenOne;
 
-    //don't show delivery options that aren't open
-    if (datum === data.merchants && !datum[random].ordering.is_open) {
-      if (datum.every(allClosed) && datum.every(allShown)) {
+    //if all shown, query for more, else try to find unshown in current data
+    if (datum[random].shown) {
+      if (datum.every(allShown) && window.mode === 'yelp') {
+        console.log('SHOWN ALL, REQUESTING MORE!');
+        reRoll('refresh');
+        return false;
+      } else if (datum.every(allShown) && window.mode === 'delivery') {
         var results = document.getElementById('results');
         results.innerHTML = '';
         results.innerHTML = 'Sorry, but it looks like there aren\'t any more places that deliver to you';
         return false;
-      } else {
-        //return selectBiz(data);
-      }
-    }
-
-    //if all shown, query for more, else try to find unshown in current data
-    if (datum[random].shown) {
-      if (datum.every(allShown)) {
-        console.log('SHOWN ALL, REQUESTING MORE!');
-        reRoll('refresh');
-        return;
       } else {
         console.log('shown, trying again');
         return selectBiz(data); //OH BOY RECURSION
@@ -501,7 +495,10 @@
         if (window.mode === 'yelp') {
           formatResults(bizData);
         } else {
-          formatDelivery(bizData);
+          var cleanedBizData = bizData.merchants.filter(function(biz, index) {
+            return biz.ordering.is_open;
+          });
+          formatDelivery(cleanedBizData);
         }
       } else {
         // We reached our target server, but it returned an error
