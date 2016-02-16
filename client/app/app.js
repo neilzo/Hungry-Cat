@@ -435,7 +435,7 @@
         return false;
       } else {
         console.log('shown, trying again');
-        return selectBiz(data); //OH BOY RECURSION
+        return selectBiz(datum); //OH BOY RECURSION
       }
     }
 
@@ -451,6 +451,10 @@
   function getBizCategories(biz) {
     var catString = '';
     var datum = biz.categories ? biz.categories : biz.summary.cuisines;
+
+    if (!datum) {
+      return 'N/A';
+    }
 
     for (var i = 0; i < datum.length; i++) {
       // ._.
@@ -495,10 +499,10 @@
         if (window.mode === 'yelp') {
           formatResults(bizData);
         } else {
-          var cleanedBizData = bizData.merchants.filter(function(biz, index) {
+          bizData = bizData.merchants.filter(function(biz) {
             return biz.ordering.is_open;
           });
-          formatDelivery(cleanedBizData);
+          formatDelivery(bizData);
         }
       } else {
         // We reached our target server, but it returned an error
