@@ -283,7 +283,7 @@
     var biz = selectBiz(data);
     
     if (!biz) {
-      alert('NO MORE DELIVERY OPTIONS SRY!');
+      document.getElementById('again').setAttribute('disabled', true);
       return;
     }
 
@@ -431,7 +431,7 @@
       } else if (datum.every(allShown) && window.mode === 'delivery') {
         var results = document.getElementById('results');
         results.innerHTML = '';
-        results.innerHTML = 'Sorry, but it looks like there aren\'t any more places that deliver to you';
+        results.innerHTML = 'Sorry, but it looks like there aren\'t any more places that deliver to you.';
         return false;
       } else {
         console.log('shown, trying again');
