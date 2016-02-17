@@ -1,0 +1,45 @@
+.delivery-view {
+  text-align: center;
+  
+  .header {
+    display: none;
+  }
+  .main-content {
+    width: 75%;
+    max-width: 360px;
+
+    @media @phone-xs {
+      width: 90%;
+    }
+  }
+  .left-col {
+    min-height: 480px;
+    width: 100%;
+    padding: 0 0 15px 0;
+
+    @media @phone-xs {
+      padding-right: 0;
+    }
+  }
+  .results {
+    padding: 6rem 10px 0;
+    @media @phone-xs {
+      padding-top: 2rem;
+      margin-right: 0;
+    }
+  }
+  .btn-action {
+    float: left;
+    @media @phone-xs {
+      float: none;
+    }
+  }
+  .tip {
+    float: right;
+    margin-top: 12px;
+    @media @phone-xs {
+      margin-top: 0;
+      float: none;
+    }
+  }
+}

@@ -14,9 +14,62 @@
 .btn-action {
   color: #fff;
   background-color: @color-action;
+  box-shadow: rgba(0, 0, 0, 0.257647) 0px 1px 6px, rgba(0, 0, 0, 0.257647) 0px 1px 4px;
 
   &:disabled {
     background-color: desaturate(@color-action, 20%);
+  }
+}
+
+#feelinLucky {
+  margin-right: 4rem;
+
+  @media @phone-xs {
+    margin-right: 2rem;
+  }
+}
+
+.tip {
+  font-size: 14px;
+  padding-left: 12px;
+  padding-right: 15px;
+  margin-left: 10px;
+  position: relative;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 0;
+    height: 0;
+    transform: translateX(-4px);
+    border-style: solid;
+    border-width: 7.5px 10px 7.5px 0;
+    border-color: transparent #007bff transparent transparent;
+    animation: LTR 1s ease-in-out infinite;
+  }
+
+  &.not-intro {
+    &:before {
+      display: none;
+    }
+  }
+
+  @media @phone-xs {
+    display: block;
+    text-align: center;
+    padding-left: 0;
+    margin-left: 0;
+    padding-top: 18px;
+    padding-right: 10px;
+
+    &:before {
+      transform: translateX(-4px) rotate(90deg);
+      animation: none;
+      left: 50%;
+      top: 6px;
+    }
   }
 }
 
@@ -37,6 +90,9 @@
 
   .main-img {
     width: 100%;
+  }
+  .main-img-sml {
+    max-width: 45%;
   }
 }
 
@@ -74,6 +130,16 @@
     width: 35%;
     vertical-align: middle;
   }
+
+  @media @phone-xs {
+    text-align: center;
+    h4 {
+      display: none;
+    }
+    span:first-child {
+      margin-right: 15px;
+    }
+  }
 }
 
 .fadeout {
@@ -92,6 +158,23 @@
   animation: scaleUp 0.65s ease-in-out forwards;
 }
 
+.ll-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  h5 {
+    width: 100%;
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .loader {
+    padding: 0.5rem 0;
+  }
+}
+
 .loader {
   padding: 4rem 0;
 }
@@ -102,6 +185,7 @@
   opacity: 0;
   display: inline-block;
   background-color: #2980b9;
+  opacity: 0.25;
   border-radius: 50%;
   
   &:nth-child(3) {
@@ -137,5 +221,13 @@
   } 40% { 
     transform: scale(1.0);
     opacity: 1;
+  }
+}
+
+@keyframes LTR {
+  0, 40%, 100% { 
+    transform: translateX(-4px);
+  }  40% { 
+    transform: translateX(0);
   }
 }

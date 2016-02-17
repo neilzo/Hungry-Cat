@@ -26,7 +26,8 @@
     "gulp-notify": "^2.2.0"
   },
   "dependencies": {
-    "yelp": "^0.2.0",
-    "express": "^4.9.7"
+    "express": "^4.9.7",
+    "oauth": "^0.9.14",
+    "yelp": "^0.2.0"
   }
 }

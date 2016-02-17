@@ -6,20 +6,43 @@
   var map;
   var infoWindow;
   var bizData;
+  var pos = {};
   var bizLocation;
   var businessMarkers = [];
+  var count = 0;
   var loader = '<div class="loader"><span class="loader-item"></span><span class="loader-item"></span><span class="loader-item"></span></div>';
+
+  //get location on init
+  (function() {
+    var geoOptions = {
+      timeout: 10 * 1000,
+      maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
+    };
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        userLat = position.coords.latitude;
+        userLon = position.coords.longitude;
+        pos.lat = userLat;
+        pos.lng = userLon;
+
+        document.getElementById('ll').remove();
+        document.getElementById('feelinLucky').removeAttribute('disabled');
+        document.getElementById('feelinDelivery').removeAttribute('disabled');
+      }, function(err) {
+        handleLocationError(err, true);
+      }, geoOptions);
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(err, false);
+    }
+  })();
 
   /* APP INIT */
   window.initMap = function() {
     //cries, TODO: make this not on window
     window.directionsService = new google.maps.DirectionsService;
     window.directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true}); //custom icons
-
-    var geoOptions = {
-      timeout: 10 * 1000,
-      maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
-    };
 
     window.icons = {
       start: {
@@ -43,26 +66,8 @@
 
     window.directionsDisplay.setMap(map);
 
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        userLat = position.coords.latitude;
-        userLon = position.coords.longitude;
-        var pos = {
-          lat: userLon,
-          lng: userLat
-        };
-
-        map.setCenter(pos);
-
-        document.getElementById('feelinLucky').removeAttribute('disabled');
-        document.getElementById('feelinLucky').innerHTML = 'You feeling lucky, punk?';
-      }, function(err) {
-        handleLocationError(err, true, infoWindow, map.getCenter());
-      }, geoOptions);
-    } else {
-      // Browser doesn't support Geolocation
-      handleLocationError(err, false, infoWindow, map.getCenter());
+    if (window.mode === 'yelp') {
+      map.setCenter(pos);
     }
   };
 
@@ -109,11 +114,10 @@
     businessMarkers = [];
   }
 
-  function handleLocationError(err, browserHasGeolocation, infoWindow, pos) {
+  function handleLocationError(err, browserHasGeolocation) {
     if (err.code === 1) {
       document.getElementById('header').innerHTML = '<h1>Sorry, this app requires your location to work.';
     } else {
-      infoWindow.setPosition(pos);
       browserHasGeolocation ?
       alrt('Error: The Geolocation service failed.') :
       alrt('Error: Your browser doesn\'t support geolocation.');
@@ -170,10 +174,18 @@
 
     document.getElementById('header').classList.add('fadeout');
     document.getElementById('main').classList.add('fadein');
-    if (window.innerWidth < 768) {
-      document.getElementById('carousel').innerHTML = ''; //hide rotating images on mobile after main action click
-      document.body.classList.remove('overlay');
-    }
+    window.mode = 'yelp';
+    maiAJAXGet(url);
+  }
+
+  function findFoodDelivery() {
+    var url = '/api/delivery?lat=' + userLat + '&lon=' + userLon;
+
+    document.getElementById('map').remove();
+    document.getElementsByClassName('page-wrap')[0].classList.add('delivery-view');
+    document.getElementById('header').classList.add('fadeout');
+    document.getElementById('main').classList.add('fadein');
+    window.mode = 'delivery';
     maiAJAXGet(url);
   }
 
@@ -254,16 +266,131 @@
     result.appendChild(businessWrap); //append business
   }
 
+  function formatDelivery(data) {
+    var businessImage,
+      businessName,
+      businessLink,
+      businessTypes,
+      businessSpecialties,
+      businessMin,
+      businessEstimate,
+      businessReview,
+      businessReviewCount,
+      yReviewNum,
+      yReview,
+      result = document.getElementById('results');
+    var businessWrap = document.createElement('div');  
+    var biz = selectBiz(data);
+    
+    if (!biz) {
+      document.getElementById('again').setAttribute('disabled', true);
+      return;
+    }
+
+    var businessCats = getBizCategories(biz);
+    var min = '$' + biz.ordering.minimum;
+    var specialties = formatSpecialties(biz);
+    var estimate = biz.ordering.availability.delivery_estimate;
+    var url = '/api/search?term=' + biz.summary.name + '&lat=' + userLat + '&lon=' + userLon;
+
+    ajaxData(url, function(data) {
+      if (data.businesses.length === 1) {
+        var biz = data.businesses[0];
+        yReview = biz.rating_img_url;
+        yReviewNum = biz.review_count;
+
+        businessReview = document.createElement('img');
+        businessReview.setAttribute('src', biz.rating_img_url);
+
+        businessReviewCount = document.createElement('p');
+        businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
+
+        businessWrap.appendChild(businessReview);
+        businessWrap.appendChild(businessReviewCount);
+      } else {
+        //noop, there is *probably* no corresponding Yelp page
+        businessReviewCount = 'There appears to be no corresponding Yelp page for this restaurant :(';
+      } 
+    });
+
+    businessWrap.setAttribute('class', 'food-card animate');
+
+    businessImage = document.createElement('img');
+    businessImage.setAttribute('class', 'main-img main-img-sml');
+    businessImage.setAttribute('src', biz.summary.merchant_logo);
+    
+    businessName = document.createElement('p');
+    businessName.setAttribute('class', 'business-name');
+    businessName.textContent = biz.summary.name;
+
+    businessLink = document.createElement('a');
+    businessLink.textContent = 'View on Delivery.com';
+    businessLink.setAttribute('href', biz.summary.url.complete);
+    businessLink.setAttribute('target', '_blank');
+
+    businessTypes = document.createElement('p');
+    businessTypes.textContent = 'Categories: ' + businessCats;
+
+    businessMin = document.createElement('p');
+    businessMin.textContent = 'Delivery Min: ' + min;
+
+    businessSpecialties = document.createElement('p');
+    businessSpecialties.textContent = 'Top Dishes: ' + specialties;
+
+    businessEstimate = document.createElement('p');
+    businessEstimate.textContent = 'Delivery Est: ' + estimate + 'm';
+
+    businessWrap.appendChild(businessImage);
+    businessWrap.appendChild(businessName);
+    businessWrap.appendChild(businessTypes);
+    businessWrap.appendChild(businessLink);
+    businessWrap.appendChild(businessMin);
+    businessWrap.appendChild(businessSpecialties);
+    businessWrap.appendChild(businessEstimate);
+
+    result.innerHTML = ''; //clear result wrap
+    result.appendChild(businessWrap); //append business
+  }
+
+  function formatSpecialties(biz) {
+    var dishes = [];
+    var recItems = biz.summary.recommended_items;
+    for (var dish in recItems) {
+      dishes.push(recItems[dish].name);
+    }
+    return dishes.join(', ');
+  }
+
   //if all results have been shown, query to find additional, else format prexisting data
   function reRoll(refresh) {
+    var tip = document.getElementById('tip');
     removeMarkers(); //remove existing markers
+
+    tip.classList.add('not-intro');
+    tip.innerHTML = '';
+    count++;
+    var message = generateMessage(count);
+    message ? tip.innerHTML = 'Places skipped: ' + count + '. ' + message : tip.innerHTML = 'Places skipped: ' + count;
     if (refresh === 'refresh') {
       offset += 20; //increase global offset to grab more results
       var url = '/api/lucky?lat=' + userLat + '&lon=' + userLon + '&offset=' + offset;
       maiAJAXGet(url);
     } else {
-      formatResults(bizData);
+      if (window.mode === 'yelp') {
+        formatResults(bizData);
+      } else {
+        formatDelivery(bizData);
+      }
     }
+  }
+
+  function generateMessage(count) {
+    var messages = ['','Ok...','Really?','Why are you even using this?','You\'re a lost cause. I\'m done.'];
+    if (count % 5 === 0 && count <= 20) {
+      return messages[count / 5];
+    }
+
+    return false;
   }
 
   //grab a higher quality biz thumbnail
@@ -284,24 +411,38 @@
     return element.shown;
   }
 
+  //test if element is not open for delivery
+  function allClosed(element) {
+    return element.ordering.is_open;
+  }
+
   //selects a random business, from the given response data
   function selectBiz(data) {
-    var random = Math.floor(Math.random() * data.businesses.length);
+    var datum = data.businesses ? data.businesses : data;
+    var random = Math.floor(Math.random() * datum.length);
     var chosenOne;
 
     //if all shown, query for more, else try to find unshown in current data
-    if (data.businesses[random].shown) {
-      if (data.businesses.every(allShown)) {
+    if (datum[random].shown) {
+      if (datum.every(allShown) && window.mode === 'yelp') {
         console.log('SHOWN ALL, REQUESTING MORE!');
         reRoll('refresh');
+        return false;
+      } else if (datum.every(allShown) && window.mode === 'delivery') {
+        var results = document.getElementById('results');
+        results.innerHTML = '';
+        results.innerHTML = 'Sorry, but it looks like there aren\'t any more places that deliver to you.';
+        return false;
       } else {
         console.log('shown, trying again');
-        return selectBiz(data); //OH BOY RECURSION
+        return selectBiz(datum); //OH BOY RECURSION
       }
     }
 
-    chosenOne = data.businesses[random];
-    mapYoDigs(chosenOne);
+    chosenOne = datum[random];
+    if (window.mode === 'yelp') {
+      mapYoDigs(chosenOne);
+    }
     chosenOne.shown = true; //is this the best way? no, but i'm gonna try it
     return chosenOne;
   }
@@ -309,12 +450,26 @@
   //returns a single business' categories and formats it
   function getBizCategories(biz) {
     var catString = '';
-    
-    for (var i = 0; i < biz.categories.length; i++) {
-      if (biz.categories.length === 1 || i === biz.categories.length - 1) {
-        catString += biz.categories[i][0];
+    var datum = biz.categories ? biz.categories : biz.summary.cuisines;
+
+    if (!datum) {
+      return 'N/A';
+    }
+
+    for (var i = 0; i < datum.length; i++) {
+      // ._.
+      if (datum === biz.categories) {   
+        if (datum.length === 1 || i === datum.length - 1) {
+          catString += datum[i][0];
+        } else {
+          catString += datum[i][0] + ', ';
+        }
       } else {
-        catString += biz.categories[i][0] + ', ';
+        if (datum.length === 1 || i === datum.length - 1) {
+          catString += datum[i];
+        } else {
+          catString += datum[i] + ', ';
+        }
       }
     };
 
@@ -340,8 +495,43 @@
       if (request.status >= 200 && request.status < 400) {
         // Success!
         data = JSON.parse(request.responseText);
-        bizData = data; //store so we can flag which results were already seen, go back, etc.
-        formatResults(bizData);
+        bizData = data;
+        if (window.mode === 'yelp') {
+          formatResults(bizData);
+        } else {
+          bizData = bizData.merchants.filter(function(biz) {
+            return biz.ordering.is_open;
+          });
+          formatDelivery(bizData);
+        }
+      } else {
+        // We reached our target server, but it returned an error
+        alrt('There was an internal server error, try again later.');
+        console.debug(request.responseText);
+      }
+    };
+
+    request.onerror = function() {
+      // There was a connection error of some sort
+      alrt('Error sending your request');
+    };
+
+    request.send();
+  }
+
+  //ajax that returns the data async via callback
+  function ajaxData(url, handleData) {    
+    var request = new XMLHttpRequest();
+
+    console.log('AJAX REQUEST!');
+
+    request.open('GET', url, true);
+    document.getElementById('results').innerHTML = loader;
+
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        // Success!
+        handleData(JSON.parse(request.responseText));
       } else {
         // We reached our target server, but it returned an error
         alrt('There was an internal server error, try again later.');
@@ -361,6 +551,6 @@
 
   /* EVENT LISTENERS */
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
+  document.getElementById('feelinDelivery').addEventListener('click', findFoodDelivery);
   document.getElementById('again').addEventListener('click', reRoll);
-
 })(window, document);

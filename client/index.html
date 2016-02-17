@@ -7,7 +7,7 @@
   <meta name="author" content="Neil Daftary">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Food Decider</title>
+  <title>Hungry Cat</title>
 
   <!-- ICONS -->
   <link rel="apple-touch-icon" href="public/favicons/apple-icon-120x120.png">
@@ -22,21 +22,21 @@
   <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
   
   <!-- inject:css -->
-  <!-- <link rel="stylesheet" href="public/core.css"> -->
+  <link rel="stylesheet" href="public/core.css">
   <!-- endinject -->
 
   <!-- PROD CSS -->
-  <link rel="stylesheet" href="public/core.min.css">
+  <!-- <link rel="stylesheet" href="public/core.min.css"> -->
   <!-- end PROD CSS -->
 
 </head>
 <body class="overlay">
 
   <div id="carousel" class="page-bgs">
-    <img src="public/bg.jpg" srcset="public/bg-m.jpg 767w, public/bg.jpg 4000w" alt="bg 1">
-    <img src="public/bg2.jpg" srcset="public/bg2-m.jpg 767w, public/bg2.jpg 4000w" alt="bg 2">
-    <img src="public/bg3.jpg" srcset="public/bg3-m.jpg 767w, public/bg3.jpg 4000w" alt="bg 3">
-    <img src="public/bg4.jpg" srcset="public/bg4-m.jpg 767w, public/bg4.jpg 4000w" alt="bg 4">
+    <div style="background-image:url(public/bg4.jpg);" alt="bg 4"></div>
+    <div style="background-image:url(public/bg3.jpg);" alt="bg 3"></div>
+    <div style="background-image:url(public/bg2.jpg);" alt="bg 2"></div>
+    <div style="background-image:url(public/bg.jpg);" alt="bg 1"></div>
   </div>
 
   <div id="alerts"></div>
@@ -45,10 +45,17 @@
     
     <div id="header" class="container header">
       
-      <h1 class="header-text">Hungry and indecisive?</h1>
-      <h3 class="header-subtext">Click the button to see how far the rabbit hole goes...</h3>
+      <h1 class="header-text">Hungry and indecisive right meow?</h1>
+      <h3 class="header-subtext">Hungry Cat got this.</h3>
 
-      <button id="feelinLucky" class="btn btn-action" disabled>LOADING YOUR LOCATION</button>
+      <div id="ll" class="ll-wrap">
+        <div class="loader"><span class="loader-item"></span><span class="loader-item"></span><span class="loader-item"></span></div>
+        <h5>Loading Your Location</h3>
+      </div>
+
+      <button id="feelinLucky" class="btn btn-action" disabled>I want to dine in</button>
+
+      <button id="feelinDelivery" class="btn btn-action" disabled>I want to dine out</button>
 
     </div>
 
@@ -56,6 +63,7 @@
       
       <div class="left-col">
         <button id="again" class="btn btn-action">I DON'T LIKE THIS</button>
+        <span id="tip" class="tip">Click to keep wasting your time</span>
 
         <div id="results" class="results grid effect"></div>
       </div>
@@ -69,16 +77,15 @@
   </div>
   
   <!-- inject:js -->
-  <!-- <script src="app/app.js"></script> -->
+  <script src="app/app.js"></script>
   <!-- endinject -->
 
   <!-- PROD JS -->
-  <script src="app/app.min.js"></script>
+  <!-- <script src="app/app.min.js"></script> -->
   <!-- end PROD JS -->
 
   <!-- Goog maps -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN1GJY-5O_PfT0XlMNiq-trjDof2WQlX8&signed_in=true&callback=initMap" async defer></script>
+  <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
   <!-- end Goog maps -->
-
 </body>
 </html>
