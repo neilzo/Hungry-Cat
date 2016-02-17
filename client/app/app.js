@@ -226,15 +226,18 @@
       businessAddress,
       businessAddressString = getBizAddress(biz);
 
+    var httpsMainImg = setYelpImg(biz.image_url, 'ls').replace(/^http:\/\//i, 'https://');
+    var httpsRatingImg = biz.rating_img_url.replace(/^http:\/\//i, 'https://');
+
     businessWrap = document.createElement('div');
     businessWrap.setAttribute('class', 'food-card animate');
 
     businessImage = document.createElement('img');
     businessImage.setAttribute('class', 'main-img');
-    businessImage.setAttribute('src', setYelpImg(biz.image_url, 'ls'));
+    businessImage.setAttribute('src', httpsMainImg);
 
     businessesReview = document.createElement('img');
-    businessesReview.setAttribute('src', biz.rating_img_url);
+    businessesReview.setAttribute('src', httpsRatingImg);
 
     businessReviewCount = document.createElement('p');
     businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
@@ -298,9 +301,10 @@
         var biz = data.businesses[0];
         yReview = biz.rating_img_url;
         yReviewNum = biz.review_count;
+        var httpsImg = yReview.replace(/^http:\/\//i, 'https://');
 
         businessReview = document.createElement('img');
-        businessReview.setAttribute('src', biz.rating_img_url);
+        businessReview.setAttribute('src', httpsImg);
 
         businessReviewCount = document.createElement('p');
         businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
