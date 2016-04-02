@@ -14,6 +14,13 @@
 
   //get location on init
   (function() {
+    
+    //show hidden other background images, for slower connections
+    var carousel = document.getElementById('carousel');
+    for (var i = 0; i < carousel.children.length - 1; i++) {
+      carousel.children[i].style.display = 'block';
+    };
+
     var geoOptions = {
       timeout: 10 * 1000,
       maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
