@@ -33,17 +33,17 @@
 <body class="overlay">
 
   <div id="carousel" class="page-bgs">
-    <div style="background-image:url(public/bg4.jpg);" alt="bg 4"></div>
-    <div style="background-image:url(public/bg3.jpg);" alt="bg 3"></div>
-    <div style="background-image:url(public/bg2.jpg);" alt="bg 2"></div>
+    <div style="background-image:url(public/bg4.jpg);display:none;" alt="bg 4"></div>
+    <div style="background-image:url(public/bg3.jpg);display:none;" alt="bg 3"></div>
+    <div style="background-image:url(public/bg2.jpg);display:none;" alt="bg 2"></div>
     <div style="background-image:url(public/bg.jpg);" alt="bg 1"></div>
   </div>
 
   <div id="alerts"></div>
 
-  <div class="page-wrap">
+  <div class="page-wrap container">
     
-    <div id="header" class="container header">
+    <div id="header" class="header">
       
       <h1 class="header-text">Hungry and indecisive right meow?</h1>
       <h3 class="header-subtext">Hungry Cat got this.</h3>
@@ -59,7 +59,7 @@
 
     </div>
 
-    <div id="main" class="container main-content">
+    <div id="main" class="main-content">
       
       <div class="left-col">
         <button id="again" class="btn btn-action">I DON'T LIKE THIS</button>
@@ -70,6 +70,9 @@
 
       <div class="right-col">
         <div id="tripDetails" class="trip-details-wrap"></div>
+        <div class="mobile-open">
+          <a id="openMap" href="#">Open in Google Maps</a>
+        </div>
         <div id="map" class="map"></div>
       </div>
 

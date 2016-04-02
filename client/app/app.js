@@ -14,6 +14,13 @@
 
   //get location on init
   (function() {
+    
+    //show hidden other background images, for slower connections
+    var carousel = document.getElementById('carousel');
+    for (var i = 0; i < carousel.children.length - 1; i++) {
+      carousel.children[i].style.display = 'block';
+    };
+
     var geoOptions = {
       timeout: 10 * 1000,
       maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
@@ -485,6 +492,15 @@
     return biz.location.display_address[0] + ', ' + biz.location.display_address[2];
   }
 
+  //open map app on a mobile device
+  function openMapApp() {
+    if((navigator.platform.indexOf('iPhone') !== -1)) {
+      window.open('maps://maps.google.com/maps?saddr=' + userLat + ',' + userLon + '&daddr=' + bizLocation.lat + ',' + bizLocation.lng + '');
+    } else {
+      window.open('http://maps.google.com/maps?saddr=' + userLat + ',' + userLon + '&daddr=' + bizLocation.lat + ',' + bizLocation.lng + '');
+    }
+  }
+
   //Vanilla js ajax
   function maiAJAXGet(url) {    
     var request = new XMLHttpRequest();
@@ -557,4 +573,5 @@
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
   document.getElementById('feelinDelivery').addEventListener('click', findFoodDelivery);
   document.getElementById('again').addEventListener('click', reRoll);
+  document.getElementById('openMap').addEventListener('click', openMapApp);
 })(window, document);
