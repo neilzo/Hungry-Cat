@@ -567,7 +567,7 @@
 
   /* EVENT LISTENERS */
   document.getElementById('feelinLucky').addEventListener('click', findFoodLucky);
-  document.getElementById('feelinDelivery').addEventListener('click', findFoodDelivery);
+  // document.getElementById('feelinDelivery').addEventListener('click', findFoodDelivery);
   document.getElementById('again').addEventListener('click', reRoll);
   document.getElementById('openMap').addEventListener('click', openMapApp);
 })(window, document);
