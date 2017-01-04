@@ -8,12 +8,7 @@
   var minifyCss = require('gulp-minify-css');
 
   var paths = {
-    index: './client/index.html',
-    root: './client',
-    html: './client/**/*.html',
-    scripts: './client/app/**/*.js',
-    app: './client/app/app.js',
-    styles: './client/public/core.css'
+    styles: './public/core.css'
   };
 
   gulp.task('default', $.sequence('server', 'watch-less'));
@@ -34,7 +29,7 @@
         cascade: false
       }))
       .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest('./client/public'));
+      .pipe(gulp.dest('./public'));
   });
 
   function minifyCSS() {
