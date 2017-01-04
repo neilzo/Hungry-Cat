@@ -7,9 +7,6 @@
   var autoprefixer = require('gulp-autoprefixer');
   var minifyCss = require('gulp-minify-css');
 
-  $.livereload();
-  $.livereload.listen();
-
   var paths = {
     index: './client/index.html',
     root: './client',
@@ -19,13 +16,10 @@
     styles: './client/public/core.css'
   };
 
-  gulp.task('default', $.sequence('inject', 'server', 'watch-less', 'watch'));
-  gulp.task('js', minifyJS);
+  gulp.task('default', $.sequence('server', 'watch-less'));
   gulp.task('css', minifyCSS);
   gulp.task('watch-less', watchLess);
   gulp.task('server', watchServer);
-  gulp.task('watch', startWatch);
-  gulp.task('inject', startInject);
 
   gulp.task('less', function() {
     return gulp.src('./less/core.less')
@@ -53,44 +47,17 @@
       });
   }
 
-  function minifyJS() {
-    return gulp.src(paths.app)
-      .pipe($.uglify())
-      .pipe($.rename('app.min.js'))
-      .pipe(gulp.dest('./client/app'))
-      .once('end', function() {
-        process.exit();
-      });
-  }
-
   function watchLess() {
     return gulp.watch('./less/**/*.less', ['less']);
   }
 
   function watchServer() {
     nodemon({
-      script: 'server.js', 
+      script: 'server.js',
       ext: 'js',
       watch: ['server.js'],
       env: { 'NODE_ENV': 'development' }
     });
-  }
-
-  function startWatch() {
-    gulp.watch('./client/public/*.css', $.livereload.changed);
-    gulp.watch('./client/app/**/*.js', $.livereload.changed);
-    gulp.watch('./client/**/*.html', $.livereload.changed);
-  }
-
-  function startInject() {
-    var target = gulp.src( paths.index );
-    var scripts = gulp.src( paths.app, {read: false} );
-    var styles = gulp.src( paths.styles, {read: false} );
-
-    return target
-      .pipe( $.inject( scripts, {relative: true}) )
-      .pipe( $.inject( styles, {relative: true}) )
-      .pipe( gulp.dest( paths.root ) );
   }
 
 })();
