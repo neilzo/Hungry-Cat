@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import '../../client/public/core.css';
 import BgImage from '../public/bg.jpg';
 
+// Components
+import Alert from './components/Alert';
+import Landing from './components/Landing';
+
 class App extends Component {
 
     state = {
@@ -26,21 +30,9 @@ class App extends Component {
                         backgroundImage: `url(${BgImage})`
                     }} alt="bg 1"></div>
                 </div>
-                <div id="alerts"></div>
+                <Alert/>
                 <div className="page-wrap container">
-                    <div id="header" className="header">
-                        <h1 className="header-text">Hungry and indecisive right meow?</h1>
-                        <h3 className="header-subtext">Hungry Cat got this.</h3>
-                        {loading && <div id="ll" className="ll-wrap">
-                            <div className="loader">
-                                <span className="loader-item"></span>
-                                <span className="loader-item"></span>
-                                <span className="loader-item"></span>
-                            </div>
-                            <h5>Loading Your Location</h5>
-                        </div>}
-                        <button id="feelinLucky" className="btn btn-action" disabled>Find Some Food</button>
-                    </div>
+                    <Landing loading={loading} />
                     <div id="main" className="main-content">
                         <div className="left-col">
                             <button id="again" className="btn btn-action">I DON'T LIKE THIS</button>
