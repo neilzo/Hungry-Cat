@@ -5,6 +5,7 @@ import BgImage from '../public/bg.jpg';
 // Components
 import Alert from './components/Alert';
 import Landing from './components/Landing';
+import HungryCat from './components/HungryCat';
 
 class App extends Component {
 
@@ -31,23 +32,10 @@ class App extends Component {
                     }} alt="bg 1"></div>
                 </div>
                 <Alert/>
-                <div className="page-wrap container">
-                    <Landing loading={loading} />
-                    <div id="main" className="main-content">
-                        <div className="left-col">
-                            <button id="again" className="btn btn-action">I DON'T LIKE THIS</button>
-                            <span id="tip" className="tip">Click to keep wasting your time</span>
-                            <div id="results" className="results grid effect"></div>
-                        </div>
-                        <div className="right-col">
-                            <div id="tripDetails" className="trip-details-wrap"></div>
-                            <div className="mobile-open">
-                                <a id="openMap" href="#">Open in Mobile Map App</a>
-                            </div>
-                            <div id="map" className="map"></div>
-                        </div>
-                    </div>
-                </div>
+                <main className="page-wrap container">
+                    {loading && <Landing loading={loading} /> }
+                    {!loading && <HungryCat /> }
+                </main>
             </div>
         );
     }
