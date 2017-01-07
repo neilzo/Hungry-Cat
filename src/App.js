@@ -24,9 +24,10 @@ class App extends Component {
         loading: false,
         done: false,
         position: {},
+        results: [],
     };
 
-    getLocation = () => {
+    getFood = () => {
         this.setState({loading: true});
         return new Promise((resolve, reject) => {
             if (navigator.geolocation) {
@@ -46,7 +47,6 @@ class App extends Component {
                 lat: position.coords.latitude,
                 long: position.coords.longitude,
             }}, () => {
-                console.log(JSON.stringify(this.state.position));
                 return fetch('/api/food', {
                     method: 'POST',
                     headers: options.headers,
@@ -54,9 +54,12 @@ class App extends Component {
                     credentials: 'omit',
                 })
                 .then(response => response.json())
-                .then(results => {
-                    console.log(results);
-                    this.setState({loading: false, done: true});
+                .then((response) => {
+                    const businesses = response.businesses;
+                    const results = businesses.filter((biz) => {
+                        return !biz.is_closed;
+                    });
+                    this.setState({loading: false, done: true, results});
                 })
                 .catch(err => console.log(err));
             });
@@ -77,7 +80,7 @@ class App extends Component {
                 <main className="page-wrap container">
                     {!done && <Landing
                                     loading={loading}
-                                    getLocation={this.getLocation}
+                                    getFood={this.getFood}
                               />
                     }
                     {done && <HungryCat /> }
