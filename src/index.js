@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'promise';
+import 'es6-promise';
+import 'isomorphic-fetch';
 import App from './App';
 import './index.css';
 

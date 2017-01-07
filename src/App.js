@@ -31,7 +31,15 @@ class App extends Component {
                 reject({error: {message: 'Geolocation Unavailable'}});
             }
         }).then((position) => {
-            this.setState({position: position.coords, loading: false, done: true}, () => console.log(this.state));
+            return this.setState({position: position.coords}, () => {
+                console.log(this.state);
+                return fetch('/api/test')
+                    .then(response => response.json())
+                    .then(results => {
+                        console.log(results);
+                        this.setState({loading: false, done: true});
+                    });
+            });
         });
     };
 
@@ -40,7 +48,7 @@ class App extends Component {
 
         return (
             <div className="App">
-                <Alert/>
+                <Alert />
                 {!done && <div id="carousel" className="page-bgs">
                     <div style={{
                         backgroundImage: `url(${BgImage})`
@@ -50,7 +58,7 @@ class App extends Component {
                     {!done && <Landing
                                     loading={loading}
                                     getLocation={this.getLocation}
-                                />
+                              />
                     }
                     {done && <HungryCat /> }
                 </main>

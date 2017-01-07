@@ -2,7 +2,6 @@
   'use strict';
   var express = require('express');
   var https = require('https');
-  //var reloader = require('connect-livereload');
   var app = express();
   var oAuth = require('oauth');
   var config = require('./secrets');
@@ -24,23 +23,8 @@
     next();
   });
 
-  router.route('/delivery').get(function(req, res, next) {
-    var lat = req.query.lat;
-    var lon = req.query.lon;
-    var body = '';
-
-    var url = 'https://api.delivery.com/merchant/search/delivery?client_id=' + deliveryId + '&latitude=' + lat + '&longitude=' + lon + '&merchant_type=R'; 
-
-    https.get(url, function(request) {
-      request.on('data', function(chunk) {
-        body += chunk;
-      })
-      .on('end', function() {
-        res.send(body);
-      });
-    }).on('error', function(e) {
-      res.send(e);
-    });
+  router.route('/test').get(function(req, res, next) {
+    res.send({message: 'OK!'});      
   });
 
   router.route('/search').get(function(req, res) {
@@ -59,13 +43,13 @@
     });
   });
 
-  router.route('/lucky').get(function(req, res) {
+  router.route('/lucky').post(function(req, res) {
     var ll = req.query.lat + ',' + req.query.lon;
     var offset = req.query.offset;
     var radius = 1609.34; //1 mile in meters
 
     if (offset) {
-      //sort: 1 sorts by distance    
+      //sort: 1 sorts by distance
       yelp.search({term: 'food', sort: 1, ll: ll, radius: radius, offset: offset}, function(error, data) {
         if (error) {
           res.status(400);
@@ -78,7 +62,7 @@
         }
       });
     } else {
-      //sort: 1 sorts by distance    
+      //sort: 1 sorts by distance
       yelp.search({term: 'food', sort: 1, ll: ll, radius: radius}, function(error, data) {
         if (error) {
           res.status(400);
@@ -92,10 +76,9 @@
       });
     }
   });
-  
+
   app.use('/api', router);
-  //app.use(reloader());
-  app.use(express.static('./client'));
+  app.use(express.static('./public'));
 
   app.listen(9000);
 })();

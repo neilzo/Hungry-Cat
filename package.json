@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Hunt your next meal.",
   "main": "",
+  "proxy": "http://localhost:9000",
   "scripts": {
     "test": "react-scripts test --env=jsdom",
     "start": "concurrently --kill-others 'gulp watch-less' 'react-scripts start'",
@@ -29,9 +30,10 @@
   },
   "dependencies": {
     "concurrently": "^3.1.0",
+    "es6-promise": "^4.0.5",
     "express": "^4.9.7",
+    "isomorphic-fetch": "^2.2.1",
     "oauth": "^0.9.14",
-    "promise": "^7.1.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "yelp": "^0.2.0"
