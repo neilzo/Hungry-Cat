@@ -1,5 +1,5 @@
 ### Hungry Cat
 
-Universal. Beautiful. Ridiculously fast. No FE dependencies. Vanilla JS. Node. The Future.
+Never think about where to eat ever again.
 
-http://hc.spaceowl.co
+https://hc.spaceowl.co
