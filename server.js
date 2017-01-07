@@ -21,26 +21,6 @@
         res.send({message: 'OK!'});
     });
 
-    router.route('/search').get(function(req, res) {
-        var term = req.query.term;
-        var ll = req.query.lat + ',' + req.query.lon;
-
-        yelp.search({
-            term: term,
-            ll: ll,
-            limit: 1
-        }, function(error, data) {
-            if (error) {
-                res.status(400);
-                res.send({
-                    message: 'There was an error searching Yelp.' + error
-                });
-            } else {
-                res.send(data);
-            }
-        });
-    });
-
     router.route('/food').post(function(req, res) {
         console.log(req.body);
         var ll = req.body.lat + ',' + req.body.long;
