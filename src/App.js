@@ -7,6 +7,17 @@ import Alert from './components/Alert';
 import Landing from './components/Landing';
 import HungryCat from './components/HungryCat';
 
+export const options = {
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Cache-Control': 'private,max-age=0,no-cache,no-store',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    }
+};
+
+
 class App extends Component {
 
     state = {
@@ -31,14 +42,23 @@ class App extends Component {
                 reject({error: {message: 'Geolocation Unavailable'}});
             }
         }).then((position) => {
-            return this.setState({position: position.coords}, () => {
-                console.log(this.state);
-                return fetch('/api/test')
-                    .then(response => response.json())
-                    .then(results => {
-                        console.log(results);
-                        this.setState({loading: false, done: true});
-                    });
+            this.setState({position: {
+                lat: position.coords.latitude,
+                long: position.coords.longitude,
+            }}, () => {
+                console.log(JSON.stringify(this.state.position));
+                return fetch('/api/food', {
+                    method: 'POST',
+                    headers: options.headers,
+                    body: JSON.stringify(this.state.position),
+                    credentials: 'omit',
+                })
+                .then(response => response.json())
+                .then(results => {
+                    console.log(results);
+                    this.setState({loading: false, done: true});
+                })
+                .catch(err => console.log(err));
             });
         });
     };

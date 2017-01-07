@@ -13,6 +13,7 @@
   "author": "Neil Daftary",
   "license": "MIT",
   "devDependencies": {
+    "concurrently": "^3.1.0",
     "gulp": "^3.8.8",
     "gulp-autoprefixer": "^3.0.2",
     "gulp-inject": "^1.0.2",
@@ -25,17 +26,16 @@
     "gulp-sequence": "^0.2.1",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.4.2",
-    "react-scripts": "0.8.4",
-    "redux-devtools": "^3.3.1"
+    "react-scripts": "0.8.4"
   },
   "dependencies": {
-    "concurrently": "^3.1.0",
+    "body-parser": "^1.15.2",
     "es6-promise": "^4.0.5",
     "express": "^4.9.7",
     "isomorphic-fetch": "^2.2.1",
     "oauth": "^0.9.14",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "yelp": "^0.2.0"
+    "yelp": "^1.0.2"
   }
 }
