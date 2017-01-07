@@ -10,31 +10,49 @@ import HungryCat from './components/HungryCat';
 class App extends Component {
 
     state = {
-        loading: true,
+        loading: false,
+        done: false,
+        position: {},
     };
 
-    componentDidMount() {
+    getLocation = () => {
+        this.setState({loading: true});
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(this.setState({loading: false}));
-            }, 1500);
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    resolve(position);
+                }, (error) => {
+                    reject(error);
+                }, {
+                    maximumAge: 30000,
+                    timeout: 27000
+                });
+            } else {
+                reject({error: {message: 'Geolocation Unavailable'}});
+            }
+        }).then((position) => {
+            this.setState({position: position.coords, loading: false, done: true}, () => console.log(this.state));
         });
-    }
+    };
 
     render() {
-        const { loading } = this.state;
+        const { loading, done } = this.state;
 
         return (
             <div className="App">
-                <div id="carousel" className="page-bgs">
+                <Alert/>
+                {!done && <div id="carousel" className="page-bgs">
                     <div style={{
                         backgroundImage: `url(${BgImage})`
-                    }} alt="bg 1"></div>
-                </div>
-                <Alert/>
+                    }}></div>
+                </div>}
                 <main className="page-wrap container">
-                    {loading && <Landing loading={loading} /> }
-                    {!loading && <HungryCat /> }
+                    {!done && <Landing
+                                    loading={loading}
+                                    getLocation={this.getLocation}
+                                />
+                    }
+                    {done && <HungryCat /> }
                 </main>
             </div>
         );

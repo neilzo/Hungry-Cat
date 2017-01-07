@@ -25,7 +25,7 @@
         title: 'LESS Compile Error'
       }))
       .pipe(autoprefixer({
-        browsers: ['last 2 versions'],
+        browsers: ['last 1 version'],
         cascade: false
       }))
       .pipe(sourcemaps.write('.'))
