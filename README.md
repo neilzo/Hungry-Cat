@@ -1,4 +1,4 @@
-###Food Decider 2.0
+### Hungry Cat
 
 Universal. Beautiful. Ridiculously fast. No FE dependencies. Vanilla JS. Node. The Future.
 
