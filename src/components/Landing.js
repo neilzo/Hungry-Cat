@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Landing = ({ loading, getLocation }) => (
+const Landing = ({ loading, getFood }) => (
     <section className="header">
         <h1 className="header-text">Hungry and indecisive right meow?</h1>
         <h3 className="header-subtext">Hungry Cat got this.</h3>
@@ -12,7 +12,7 @@ const Landing = ({ loading, getLocation }) => (
             </div>
             <h5>Fetching noms...</h5>
         </div>}
-        <button className="btn btn-action" onClick={getLocation}>Find Some Food</button>
+        <button className="btn btn-action" onClick={getFood}>Find Some Food</button>
     </section>
 );
 

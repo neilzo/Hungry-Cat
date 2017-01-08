@@ -67,7 +67,7 @@ class App extends Component {
     };
 
     render() {
-        const { loading, done } = this.state;
+        const { loading, done, results } = this.state;
 
         return (
             <div className="App">
@@ -83,7 +83,10 @@ class App extends Component {
                                     getFood={this.getFood}
                               />
                     }
-                    {done && <HungryCat /> }
+                    {done && <HungryCat
+                                results={results}
+                             />
+                     }
                 </main>
             </div>
         );

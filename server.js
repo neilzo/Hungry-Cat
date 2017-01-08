@@ -5,6 +5,7 @@
     const config = require('./secrets');
     const bodyParser = require('body-parser');
     const Yelp = require('yelp');
+    const fakeData = require('./sample.json');
 
     const router = express.Router();
 
@@ -28,11 +29,12 @@
         const radius = 1609.34; //1 mile in meters
 
         //sort: 1 sorts by distance
-        yelp.search({term: 'food', sort: 1, ll: ll, radius: radius}).then((data) => {
-            res.send(data);
-        }).catch((err) => {
-            res.status(500).send(err);
-        });
+        // yelp.search({term: 'food', sort: 1, ll: ll, radius: radius}).then((data) => {
+        //     res.send(data);
+        // }).catch((err) => {
+        //     res.status(500).send(err);
+        // });
+        res.send(fakeData);
     });
 
     app.use('/api', router);
