@@ -1,5 +1,6 @@
 (function() {
     'use strict';
+    require('isomorphic-fetch');
     const express = require('express');
     const app = express();
     const config = require('./secrets');
@@ -11,7 +12,10 @@
 
     app.use(bodyParser.json()); // for parsing application/json
 
-    const yelp = new Yelp({consumer_key: config.yelp.consumer_key, consumer_secret: config.yelp.consumer_secret, token: config.yelp.token, token_secret: config.yelp.token_secret});
+    const foursquare = {
+        client_id: config.foursquare.client_id,
+        client_secret: config.foursquare.client_secret,
+    };
 
     router.use((req, res, next) => {
         console.log('happenings!');
@@ -23,18 +27,12 @@
     });
 
     router.route('/food').post(function(req, res) {
-        console.log(req.body);
+        const url = 'https://api.foursquare.com/v2/venues/search?';
         const ll = req.body.lat + ',' + req.body.long;
-        // const offset = req.query.offset;
-        const radius = 1609.34; //1 mile in meters
-
-        //sort: 1 sorts by distance
-        // yelp.search({term: 'food', sort: 1, ll: ll, radius: radius}).then((data) => {
-        //     res.send(data);
-        // }).catch((err) => {
-        //     res.status(500).send(err);
-        // });
-        res.send(fakeData);
+        fetch(`${url}ll=${ll}&client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20161231`)
+            .then((response) => response.json())
+            .then(json => res.send(json))
+            .catch(error => res.send(error));
     });
 
     app.use('/api', router);

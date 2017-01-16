@@ -17,7 +17,6 @@ export const options = {
     }
 };
 
-
 class App extends Component {
 
     state = {
@@ -47,21 +46,7 @@ class App extends Component {
                 lat: position.coords.latitude,
                 long: position.coords.longitude,
             }}, () => {
-                return fetch('/api/food', {
-                    method: 'POST',
-                    headers: options.headers,
-                    body: JSON.stringify(this.state.position),
-                    credentials: 'omit',
-                })
-                .then(response => response.json())
-                .then((response) => {
-                    const businesses = response.businesses;
-                    const results = businesses.filter((biz) => {
-                        return !biz.is_closed;
-                    });
-                    this.setState({loading: false, done: true, results});
-                })
-                .catch(err => console.log(err));
+                this.setState({loading: false, done: true});
             });
         });
     };
