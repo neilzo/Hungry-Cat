@@ -1,6 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-const Row = ({ rez }) => (
+function isEmpty(object) {
+    if (typeof object !== 'object') {
+        throw new Error('That is not an object!');
+    }
+    // Good code is code that you can't read but just works
+    // JK todo fix this unreadable mess
+    return !(!!Object.keys(object).length);
+}
+
+const Featured = ({ rez }) => (
     <p>{rez.name}</p>
 );
 
@@ -17,6 +26,7 @@ export default class Map extends Component {
     };
 
     state = {
+        featured: {},
         results: [],
     };
 
@@ -46,8 +56,14 @@ export default class Map extends Component {
     getNearbyPlaces = (request) => {
         this.service = new window.google.maps.places.PlacesService(this.map);
         const results = this.service.nearbySearch(request, (results) => {
-            this.setState({ results });
+            this.setState({ results }, () => this.getRez());
         });
+    };
+
+    getRez = () => {
+        const rez = this.state.results.shift();
+        this.setState({featured: rez});
+        this.addMarker(rez.geometry.location);
     };
 
     addMarker = (location) => {
@@ -63,15 +79,12 @@ export default class Map extends Component {
     };
 
     render() {
-        const { results } = this.state;
+        const { results, featured } = this.state;
         return (
             <div style={{height: '100%', display: 'flex'}}>
-                {!!results.length && <div style={{flex: '1'}}>
-                    {results.map((rez, i) => {
-                        this.addMarker(rez.geometry.location);
-                        return <Row key={`rez-${i}`} rez={rez} />;
-                    })}
-                </div>}
+                <div style={{flex: '1'}}>
+                    <Featured rez={featured} />
+                </div>
                 <div className="map" ref={div => this.mapWrap = div} />
             </div>
         );
