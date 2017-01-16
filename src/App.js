@@ -23,7 +23,6 @@ class App extends Component {
         loading: false,
         done: false,
         position: {},
-        results: [],
     };
 
     getFood = () => {
@@ -52,7 +51,7 @@ class App extends Component {
     };
 
     render() {
-        const { loading, done, results } = this.state;
+        const { loading, done } = this.state;
 
         return (
             <div className="App">
@@ -68,10 +67,7 @@ class App extends Component {
                                     getFood={this.getFood}
                               />
                     }
-                    {done && <HungryCat
-                                results={results}
-                             />
-                     }
+                    {done && <HungryCat />}
                 </main>
             </div>
         );

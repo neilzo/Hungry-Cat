@@ -1,13 +1,9 @@
 import React from 'react';
+import Map from './Map';
 
-const Nom = ({result: { name }}) => (
-    <p>{name}</p>
-);
-
-const HungryCat = ({ results }) => (
+const HungryCat = () => (
     <div className="main-content">
-        { results.map(result => <Nom result={result} />)}
-        <button className="btn">Open Yelp Page</button>
+        <Map />
         <button className="btn btn-action">Next</button>
     </div>
 );
