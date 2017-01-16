@@ -22,6 +22,7 @@ export default class Map extends Component {
 
     map = null;
     service = null;
+    markers = [];
 
     componentDidMount() {
         const { position: { lat, long } } = this.props;
@@ -30,6 +31,9 @@ export default class Map extends Component {
           center: latLng,
           zoom: 15
         });
+
+        this.addMarker({lat: () => lat, lng: () => long});
+
         const request = {
             location: latLng,
             radius: '1000',
@@ -46,12 +50,27 @@ export default class Map extends Component {
         });
     };
 
+    addMarker = (location) => {
+        const latLng = {
+            lat: location.lat(),
+            lng: location.lng(),
+        }
+        const marker = new window.google.maps.Marker({
+          position: latLng,
+          map: this.map
+        });
+        this.markers.push(marker);
+    };
+
     render() {
         const { results } = this.state;
         return (
             <div style={{height: '100%', display: 'flex'}}>
                 {!!results.length && <div style={{flex: '1'}}>
-                    {results.map(rez => <Row rez={rez} />)}
+                    {results.map((rez, i) => {
+                        this.addMarker(rez.geometry.location);
+                        return <Row key={`rez-${i}`} rez={rez} />;
+                    })}
                 </div>}
                 <div className="map" ref={div => this.mapWrap = div} />
             </div>
