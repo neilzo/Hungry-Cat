@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 
-function isEmpty(object) {
-    if (typeof object !== 'object') {
-        throw new Error('That is not an object!');
-    }
-    // Good code is code that you can't read but just works
-    // JK todo fix this unreadable mess
-    return !(!!Object.keys(object).length);
-}
-
-const Featured = ({ rez }) => (
-    <p>{rez.name}</p>
+const Featured = ({ rez, details }) => (
+    <div>
+        <p>Name: {rez.name}</p>
+        <p>Rating: {details.rating}</p>
+        <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
+    </div>
 );
 
 export default class Map extends Component {
@@ -28,6 +23,7 @@ export default class Map extends Component {
     state = {
         featured: {},
         results: [],
+        details: {},
     };
 
     map = null;
@@ -55,15 +51,21 @@ export default class Map extends Component {
 
     getNearbyPlaces = (request) => {
         this.service = new window.google.maps.places.PlacesService(this.map);
-        const results = this.service.nearbySearch(request, (results) => {
+        this.service.nearbySearch(request, (results) => {
             this.setState({ results }, () => this.getRez());
         });
     };
 
     getRez = () => {
         const rez = this.state.results.shift();
-        this.setState({featured: rez});
+        this.setState({featured: rez}, () => this.getRezDetails());
         this.addMarker(rez.geometry.location);
+    };
+
+    getRezDetails = () => {
+        this.service.getDetails({
+            placeId: this.state.featured.place_id,
+        }, result => this.setState({details: result}));
     };
 
     addMarker = (location) => {
@@ -79,11 +81,11 @@ export default class Map extends Component {
     };
 
     render() {
-        const { results, featured } = this.state;
+        const { featured, details } = this.state;
         return (
             <div style={{height: '100%', display: 'flex'}}>
                 <div style={{flex: '1'}}>
-                    <Featured rez={featured} />
+                    <Featured rez={featured} details={details} />
                 </div>
                 <div className="map" ref={div => this.mapWrap = div} />
             </div>
