@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 const Featured = ({ rez, details, rez: { opening_hours }, photos }) => {
     opening_hours = opening_hours || {};
-    const imgs = photos.map((photo, i) => <img src={photo} alt="photo" key={i}/>);
+    const imgs = photos.map((photo, i) => <img src={photo} alt="restaurant" key={i}/>);
     return (
         <div>
             <p>Name: {rez.name}</p>
@@ -88,7 +88,9 @@ export default class Map extends Component {
 
         this.setState((previousState) => {
             const clonedState = {...previousState};
-            clonedState.photos.push(photos[0].getUrl({'maxWidth': 1024, 'maxHeight': 768}))
+            photos.forEach(() => {
+                clonedState.photos.push(photos[0].getUrl({'maxWidth': 1024, 'maxHeight': 768}));
+            });
             return clonedState;
         });
     };
@@ -108,11 +110,16 @@ export default class Map extends Component {
     render() {
         const { featured, details, photos } = this.state;
         return (
-            <div style={{height: '100%', display: 'flex'}}>
+            <div className="map-wrap">
                 <div style={{flex: '1'}}>
-                    <Featured rez={featured} details={details} photos={photos} />
+                    <div style={{flex: '1'}}>
+                        <Featured rez={featured} details={details} photos={photos} />
+                    </div>
+                    <div className="map" ref={div => this.mapWrap = div} />
                 </div>
-                <div className="map" ref={div => this.mapWrap = div} />
+                <div style={{flex: '1'}}>
+                    <button className="btn btn-action">Next</button>
+                </div>
             </div>
         );
     }
