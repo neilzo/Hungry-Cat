@@ -79,7 +79,7 @@ export default class Map extends Component {
     getRezDetails = () => {
         this.service.getDetails({
             placeId: this.state.featured.place_id,
-        }, result => this.setState({details: result}, this.getRezPhoto(this.state.featured)));
+        }, result => this.setState({details: result}, () => this.getRezPhoto(this.state.details)));
     };
 
     getRezPhoto = (place) => {
@@ -109,6 +109,13 @@ export default class Map extends Component {
         this.markers.push(marker);
     };
 
+    clickNext = () => {
+        // Clear past rez photo array
+        this.setState({
+            photos: [],
+        }, () => this.getRez());
+    };
+
     render() {
         const { featured, details, photos } = this.state;
         return (
@@ -120,7 +127,7 @@ export default class Map extends Component {
                     <div className="map" ref={div => this.mapWrap = div} />
                 </div>
                 <div style={{display: 'flex', flex: '1'}}>
-                    <button className="btn btn-action">Next</button>
+                    <button onClick={this.clickNext} className="btn btn-action">Next</button>
                 </div>
             </div>
         );
