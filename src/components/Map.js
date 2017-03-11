@@ -2,26 +2,21 @@ import React, { Component } from 'react';
 
 import Carousel from './Carousel';
 
-const Featured = ({ rez, details, rez: { opening_hours }, photos }) => {
-    opening_hours = opening_hours || {}; // defaultProps y u no work?
+const Featured = ({ rez, details, photos }) => {
     return (
         <div>
             <div className="imgs-wrap">
                 <Carousel photos={photos} />
             </div>
-            <p>Name: {rez.name}</p>
-            <p>Rating: {details.rating}</p>
-            <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
-            <p>{opening_hours.open_now ? 'Open Now' : null}</p>
-            <p>Address: {rez.vicinity}</p>
+            <div className="info-wrap">
+                <p>Name: {rez.name}</p>
+                <p>Rating: {details.rating}</p>
+                <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
+                <p>Address: {rez.vicinity}</p>
+            </div>
         </div>
     );
 }
-
-// This doesn't work?
-Featured.defaultProps = {
-    opening_hours: {},
-};
 
 export default class Map extends Component {
     static propTypes = {
@@ -58,8 +53,8 @@ export default class Map extends Component {
 
         const request = {
             location: latLng,
-            radius: '1000',
-            types: ['restaurant', 'cafe', 'meal_takeaway'],
+            radius: '1600',
+            types: ['restaurant'],
             openNow: true,
         };
         this.getNearbyPlaces(request);
@@ -93,7 +88,7 @@ export default class Map extends Component {
         this.setState((previousState) => {
             const clonedState = {...previousState};
             photos.forEach((photo) => {
-                clonedState.photos.push(photo.getUrl({'maxWidth': 1024, 'maxHeight': 768}));
+                clonedState.photos.push(photo.getUrl({'maxWidth': 720, 'maxHeight': 480}));
             });
             return clonedState;
         });
