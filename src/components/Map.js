@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
+import Carousel from './Carousel';
+
 const Featured = ({ rez, details, rez: { opening_hours }, photos }) => {
-    opening_hours = opening_hours || {};
-    const imgs = photos.map((photo, i) => <img src={photo} alt="restaurant" key={i}/>);
+    opening_hours = opening_hours || {}; // defaultProps y u no work?
     return (
         <div>
             <div className="imgs-wrap">
-                {imgs}
+                <Carousel photos={photos} />
             </div>
             <p>Name: {rez.name}</p>
             <p>Rating: {details.rating}</p>
@@ -17,6 +18,7 @@ const Featured = ({ rez, details, rez: { opening_hours }, photos }) => {
     );
 }
 
+// This doesn't work?
 Featured.defaultProps = {
     opening_hours: {},
 };
@@ -90,8 +92,8 @@ export default class Map extends Component {
 
         this.setState((previousState) => {
             const clonedState = {...previousState};
-            photos.forEach(() => {
-                clonedState.photos.push(photos[0].getUrl({'maxWidth': 1024, 'maxHeight': 768}));
+            photos.forEach((photo) => {
+                clonedState.photos.push(photo.getUrl({'maxWidth': 1024, 'maxHeight': 768}));
             });
             return clonedState;
         });
