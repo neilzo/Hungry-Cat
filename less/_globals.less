@@ -145,6 +145,31 @@ p {
     flex-wrap: wrap;
 }
 
+.imgs-wrap {
+    display: flex;
+    max-height: 50vh;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 2rem;
+
+    &:after {
+        content: " ";
+        display:block;
+        position: absolute;
+        background-image: linear-gradient(319deg, white 16px, transparent 17px), linear-gradient(39deg, white 16px, transparent 17px);
+        background-size: 54px 23px;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        background-size: 20px 23px;
+        height: 10px;
+    }
+}
+
+.imgs-wrap img {
+    object-fit: cover;
+}
+
 @keyframes fadeCycle {
  0%{
      opacity: 1;

@@ -5,12 +5,14 @@ const Featured = ({ rez, details, rez: { opening_hours }, photos }) => {
     const imgs = photos.map((photo, i) => <img src={photo} alt="restaurant" key={i}/>);
     return (
         <div>
+            <div className="imgs-wrap">
+                {imgs}
+            </div>
             <p>Name: {rez.name}</p>
             <p>Rating: {details.rating}</p>
             <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
             <p>{opening_hours.open_now ? 'Open Now' : null}</p>
             <p>Address: {rez.vicinity}</p>
-            {imgs}
         </div>
     );
 }
