@@ -113,13 +113,13 @@ export default class Map extends Component {
         const { featured, details, photos } = this.state;
         return (
             <div className="map-wrap">
-                <div style={{flex: '1'}}>
+                <div style={{flex: '1 1 85%'}}>
                     <div style={{flex: '1'}}>
                         <Featured rez={featured} details={details} photos={photos} />
                     </div>
                     <div className="map" ref={div => this.mapWrap = div} />
                 </div>
-                <div style={{flex: '1'}}>
+                <div style={{display: 'flex', flex: '1'}}>
                     <button className="btn btn-action">Next</button>
                 </div>
             </div>
