@@ -148,7 +148,6 @@ p {
 .imgs-wrap {
     display: flex;
     max-height: 50vh;
-    overflow: hidden;
     position: relative;
     margin-bottom: 2rem;
 
@@ -183,6 +182,29 @@ p {
 
 .slick-initialized .slick-slide {
     height: 50vh;
+}
+
+.slick-dots {
+    bottom: 25px;
+}
+
+.slick-dots li button:before {
+    opacity: 1;
+    color: white;
+}
+
+.slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: @color-action;
+}
+
+.slick-next,
+.slick-prev {
+    display: none;
+
+    @media @tablet {
+        display: block;
+    }
 }
 
 @keyframes fadeCycle {

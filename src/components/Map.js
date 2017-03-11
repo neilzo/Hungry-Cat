@@ -9,7 +9,7 @@ const Featured = ({ rez, details, photos }) => {
                 <Carousel photos={photos} />
             </div>
             <div className="info-wrap">
-                <p>Name: {rez.name}</p>
+                <p className="rez-title">{rez.name}</p>
                 <p>Rating: {details.rating}</p>
                 <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
                 <p>Address: {rez.vicinity}</p>
