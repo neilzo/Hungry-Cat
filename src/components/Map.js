@@ -10,9 +10,9 @@ const Featured = ({ rez, details, photos }) => {
             </div>
             <div className="info-wrap">
                 <p className="rez-title">{rez.name}</p>
+                <p>{rez.vicinity}</p>
                 <p>Rating: {details.rating}</p>
-                <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
-                <p>Address: {rez.vicinity}</p>
+                <p className="rez-dollas">{'$'.repeat(details.price_level)}</p>
             </div>
         </div>
     );
