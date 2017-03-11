@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
 
-const Featured = ({ rez, details }) => (
-    <div>
-        <p>Name: {rez.name}</p>
-        <p>Rating: {details.rating}</p>
-        <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
-    </div>
-);
+const Featured = ({ rez, details, rez: { opening_hours }, photos }) => {
+    opening_hours = opening_hours || {};
+    const imgs = photos.map((photo, i) => <img src={photo} alt="photo" key={i}/>);
+    return (
+        <div>
+            <p>Name: {rez.name}</p>
+            <p>Rating: {details.rating}</p>
+            <p>Mo Money Mo Problems: {'$'.repeat(details.price_level)}</p>
+            <p>{opening_hours.open_now ? 'Open Now' : null}</p>
+            <p>Address: {rez.vicinity}</p>
+            {imgs}
+        </div>
+    );
+}
+
+Featured.defaultProps = {
+    opening_hours: {},
+};
 
 export default class Map extends Component {
     static propTypes = {
@@ -24,6 +35,7 @@ export default class Map extends Component {
         featured: {},
         results: [],
         details: {},
+        photos: [],
     };
 
     map = null;
@@ -65,7 +77,20 @@ export default class Map extends Component {
     getRezDetails = () => {
         this.service.getDetails({
             placeId: this.state.featured.place_id,
-        }, result => this.setState({details: result}));
+        }, result => this.setState({details: result}, this.getRezPhoto(this.state.featured)));
+    };
+
+    getRezPhoto = (place) => {
+        const photos = place.photos;
+        if (!photos) {
+          return;
+        }
+
+        this.setState((previousState) => {
+            const clonedState = {...previousState};
+            clonedState.photos.push(photos[0].getUrl({'maxWidth': 1024, 'maxHeight': 768}))
+            return clonedState;
+        });
     };
 
     addMarker = (location) => {
@@ -81,11 +106,11 @@ export default class Map extends Component {
     };
 
     render() {
-        const { featured, details } = this.state;
+        const { featured, details, photos } = this.state;
         return (
             <div style={{height: '100%', display: 'flex'}}>
                 <div style={{flex: '1'}}>
-                    <Featured rez={featured} details={details} />
+                    <Featured rez={featured} details={details} photos={photos} />
                 </div>
                 <div className="map" ref={div => this.mapWrap = div} />
             </div>
