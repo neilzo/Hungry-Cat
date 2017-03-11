@@ -18,6 +18,12 @@ const Featured = ({ rez, details, photos }) => {
     );
 }
 
+Featured.propTypes = {
+    rez: React.PropTypes.object,
+    details: React.PropTypes.object,
+    photos: React.PropTypes.array,
+};
+
 export default class Map extends Component {
     static propTypes = {
         position: React.PropTypes.shape({
