@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Carousel from './Carousel';
+import Foursquare from './Foursquare';
 
 const Featured = ({ rez, details, photos }) => {
     return (
@@ -120,12 +121,14 @@ export default class Map extends Component {
     };
 
     render() {
-        const { featured, details, photos } = this.state;
+        const { position } = this.props;
+        const { featured, details, photos, details: { name } } = this.state;
         return (
             <div className="map-wrap">
                 <div style={{flex: '1 1 85%'}}>
                     <div style={{flex: '1'}}>
                         <Featured rez={featured} details={details} photos={photos} />
+                        {name && <Foursquare pos={position} name={name} />}
                     </div>
                     <div className="map" ref={div => this.mapWrap = div} />
                 </div>
