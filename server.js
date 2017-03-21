@@ -17,6 +17,11 @@
         client_secret: config.foursquare.client_secret,
     };
 
+    const fetchVenueDetails = (id) => {
+        const url = `https://api.foursquare.com/v2/venues/${id}?client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20161231`;
+        return fetch(url);
+    };
+
     router.use((req, res, next) => {
         console.log('happenings!');
         next();
@@ -33,7 +38,24 @@
 
         fetch(`${url}&ll=${ll}&query=${query}&v=20161231`)
             .then((response) => response.json())
-            .then(json => res.send(json))
+            .then(json => {
+                const response = json.response;
+                // Implement a fuzzy search here
+                // because `intent=match` is too damn strict ;_;
+                const match = response.venues[0];
+                if (match) {
+                    // fetch the venue details
+                    fetchVenueDetails(match.id)
+                        .then(response => response.json())
+                        .then(json => {
+                            // TODO don't send the whole response
+                            res.send(json);
+                        })
+                        .catch(e => res.send(e));
+                } else {
+                    res.send({ message: 'No results found :('});
+                }
+            })
             .catch(error => res.send(error));
     });
 
