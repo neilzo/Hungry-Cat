@@ -1,101 +1,66 @@
-(function(){
-  'use strict';
-  var express = require('express');
-  var https = require('https');
-  //var reloader = require('connect-livereload');
-  var app = express();
-  var oAuth = require('oauth');
-  var config = require('./secrets');
+(function() {
+    'use strict';
+    require('isomorphic-fetch');
+    const express = require('express');
+    const app = express();
+    const config = require('./secrets');
+    const bodyParser = require('body-parser');
+    const Yelp = require('yelp');
+    const fakeData = require('./sample.json');
 
-  var router = express.Router();
+    const router = express.Router();
 
-  var deliveryId = config.delivery.client_id;
-  var deliverySecret = config.delivery.secret;
+    app.use(bodyParser.json()); // for parsing application/json
 
-  var yelp = require('yelp').createClient({
-    consumer_key: config.yelp.consumer_key,
-    consumer_secret: config.yelp.consumer_secret,
-    token: config.yelp.token,
-    token_secret: config.yelp.token_secret
-  });
+    const foursquare = {
+        client_id: config.foursquare.client_id,
+        client_secret: config.foursquare.client_secret,
+    };
 
-  router.use(function(req, res, next) {
-    //console.log('happenings!');
-    next();
-  });
+    const fetchVenueDetails = (id) => {
+        const url = `https://api.foursquare.com/v2/venues/${id}?client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}&v=20161231`;
+        return fetch(url);
+    };
 
-  router.route('/delivery').get(function(req, res, next) {
-    var lat = req.query.lat;
-    var lon = req.query.lon;
-    var body = '';
-
-    var url = 'https://api.delivery.com/merchant/search/delivery?client_id=' + deliveryId + '&latitude=' + lat + '&longitude=' + lon + '&merchant_type=R'; 
-
-    https.get(url, function(request) {
-      request.on('data', function(chunk) {
-        body += chunk;
-      })
-      .on('end', function() {
-        res.send(body);
-      });
-    }).on('error', function(e) {
-      res.send(e);
+    router.use((req, res, next) => {
+        console.log('happenings!');
+        next();
     });
-  });
 
-  router.route('/search').get(function(req, res) {
-    var term = req.query.term;
-    var ll = req.query.lat + ',' + req.query.lon;
-
-    yelp.search({term: term, ll: ll, limit: 1}, function(error, data) {
-      if (error) {
-        res.status(400);
-        res.send({
-          message: 'There was an error searching Yelp.' + error
-        });
-      } else {
-        res.send(data);
-      }
+    router.route('/test').get((req, res, next) => {
+        res.send({message: 'OK!'});
     });
-  });
 
-  router.route('/lucky').get(function(req, res) {
-    var ll = req.query.lat + ',' + req.query.lon;
-    var offset = req.query.offset;
-    var radius = 1609.34; //1 mile in meters
+    router.route('/fq').post((req, res) => {
+        const url = `https://api.foursquare.com/v2/venues/search?client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}`;
+        const ll = `${req.body.lat},${req.body.long}`;
+        const query = req.body.query;
 
-    if (offset) {
-      //sort: 1 sorts by distance    
-      yelp.search({term: 'food', sort: 1, ll: ll, radius: radius, offset: offset}, function(error, data) {
-        if (error) {
-          res.status(400);
-          res.send({
-            message: 'There was an error searching Yelp.',
-            error: error
-          });
-        } else {
-          res.send(data);
-        }
-      });
-    } else {
-      //sort: 1 sorts by distance    
-      yelp.search({term: 'food', sort: 1, ll: ll, radius: radius}, function(error, data) {
-        if (error) {
-          res.status(400);
-          res.send({
-            message: 'There was an error searching Yelp.',
-            error: error
-          });
-        } else {
-          res.send(data);
-        }
-      });
-    }
-  });
-  
-  app.use('/api', router);
-  //app.use(reloader());
-  app.use(express.static('./client'));
+        fetch(`${url}&ll=${ll}&query=${query}&v=20161231`)
+            .then((response) => response.json())
+            .then(json => {
+                const response = json.response;
+                // Implement a fuzzy search here
+                // because `intent=match` is too damn strict ;_;
+                const match = response.venues[0];
+                if (match) {
+                    // fetch the venue details
+                    fetchVenueDetails(match.id)
+                        .then(response => response.json())
+                        .then(json => {
+                            // TODO don't send the whole response
+                            res.send(json);
+                        })
+                        .catch(e => res.send(e));
+                } else {
+                    res.send({ message: 'No results found :('});
+                }
+            })
+            .catch(error => res.send(error));
+    });
 
-  app.listen(9000);
+    app.use('/api', router);
+    // app.use(express.static('./public'));
+
+    app.listen(9000);
 })();

@@ -1,5 +1,5 @@
 * {
- box-sizing: border-box; 
+ box-sizing: border-box;
 }
 
 html {
@@ -11,6 +11,7 @@ html {
 body {
   font-size: 1.6rem;
   min-height: 100%;
+  height: 100%;
   background-color: darkgrey;
   display: flex;
   align-items: center;
@@ -26,6 +27,16 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: @z--1;
   }
+}
+
+#root,
+.App {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 //TODO: move to typography.less
@@ -57,34 +68,36 @@ p {
     background-size: cover;
     background-position: center center;
 
-    @media @tablet {
-      &:nth-child(1) {
-        animation: fadeCycle 24s 18s infinite;
-      }
-      &:nth-child(2) {
-        animation: fadeCycle 24s 12s infinite;
-      }
-      &:nth-child(3) {
-        animation: fadeCycle 24s 6s infinite;
-      }
-      &:nth-child(4) {
-        animation: fadeCycle 24s 0s infinite;
-      }
-    }
+    // @media @tablet {
+    //   &:nth-child(1) {
+    //     animation: fadeCycle 24s 18s infinite;
+    //   }
+    //   &:nth-child(2) {
+    //     animation: fadeCycle 24s 12s infinite;
+    //   }
+    //   &:nth-child(3) {
+    //     animation: fadeCycle 24s 6s infinite;
+    //   }
+    //   &:nth-child(4) {
+    //     animation: fadeCycle 24s 0s infinite;
+    //   }
+    // }
   }
 }
 
 .page-wrap {
   margin: 0;
+  height: 100%;
 }
 
 .main-content {
-  font-size: 0;
   background-color: #fff;
-  height: 0; //for animation
   transform: translate3d(0,0,0);
   overflow: auto;
   box-shadow: rgba(0, 0, 0, 0.557647) 0px 1px 6px, rgba(0, 0, 0, 0.557647) 0px 1px 4px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   @media @desktop {
     max-height: 95vh;
@@ -92,7 +105,7 @@ p {
     overflow-y: scroll;
   }
 
-  .btn-action {   
+  .btn-action {
     @media @phone-xs {
       width: 100%;
     }
@@ -117,12 +130,85 @@ p {
 
 .left-col {
   @media @tablet {
-    min-height: 563px;  
+    min-height: 563px;
   }
 }
 
 .map {
-  height: 51rem;
+  display: none;
+}
+
+.map-wrap {
+    height: 100%;
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+}
+
+.imgs-wrap {
+    display: flex;
+    max-height: 50vh;
+    position: relative;
+    margin-bottom: 2rem;
+
+    &:after {
+        content: ' ';
+        display:block;
+        position: absolute;
+        background-image: linear-gradient(319deg, white 16px, transparent 17px), linear-gradient(39deg, white 16px, transparent 17px);
+        background-size: 54px 23px;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        background-size: 20px 23px;
+        height: 10px;
+    }
+
+    &:empty {
+        &:before {
+            content: 'Image not available';
+            height: 50vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
+.imgs-wrap img {
+    object-fit: cover;
+}
+
+.slick-slider {
+    width: 100%;
+}
+
+.slick-initialized .slick-slide {
+    height: 50vh;
+}
+
+.slick-dots {
+    bottom: 25px;
+}
+
+.slick-dots li button:before {
+    opacity: 1;
+    color: white;
+}
+
+.slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: @color-action;
+}
+
+.slick-next,
+.slick-prev {
+    display: none;
+
+    @media @tablet {
+        display: block;
+    }
 }
 
 @keyframes fadeCycle {

@@ -1,8 +1,5 @@
 secrets.js
 node_modules
 
-client/public/core.css
-client/public/core.css.map
-
-client/app/app.min.js
-client/public/core.min.css
+public/core.css
+public/core.css.map
