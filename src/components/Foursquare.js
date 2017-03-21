@@ -28,10 +28,10 @@ export default class Foursquare extends Component {
     render() {
         const { venue } = this.state;
         return (
-            <div>
+            <div className="info-wrap">
                 {!venue && 'Loading Foursquare data...'}
                 {venue && <div>
-                    Rating: {venue.rating}
+                    Foursquare rating: {venue.rating}
                 </div>}
             </div>
         )
