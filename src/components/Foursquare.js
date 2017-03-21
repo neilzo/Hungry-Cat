@@ -7,6 +7,10 @@ export default class Foursquare extends Component {
         name: React.PropTypes.string,
     };
 
+    state = {
+        venue: null,
+    };
+
     componentDidMount() {
         const { pos: { lat, long }, name } = this.props;
         const data = {
@@ -14,16 +18,21 @@ export default class Foursquare extends Component {
             long,
             query: name,
         };
-        console.log(data);
         FetchFoursquare(data).then((response) => {
-            console.log('success!', response);
+            // gonna fix this :poop:
+            const venue = response.response.venue;
+            this.setState({ venue });
         });
     }
 
     render() {
+        const { venue } = this.state;
         return (
             <div>
-                SUP!
+                {!venue && 'Loading Foursquare data...'}
+                {venue && <div>
+                    Rating: {venue.rating}
+                </div>}
             </div>
         )
     }
