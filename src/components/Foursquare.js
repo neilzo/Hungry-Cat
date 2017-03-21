@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { FetchFoursquare } from '../remote';
 
 export default class Foursquare extends Component {
     static propTypes = {
@@ -14,17 +15,9 @@ export default class Foursquare extends Component {
             query: name,
         };
         console.log(data);
-        fetch(`/api/fq?`, {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(json => console.log(json));
+        FetchFoursquare(data).then((response) => {
+            console.log('success!', response);
+        });
     }
 
     render() {
