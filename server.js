@@ -59,6 +59,21 @@
             .catch(error => res.send(error));
     });
 
+    router.route('/findFood').post((req, res) => {
+        const url = `https://api.foursquare.com/v2/venues/explore?client_id=${foursquare.client_id}&client_secret=${foursquare.client_secret}`;
+        const data = req.body;
+        const ll = `${data.lat},${data.long}`;
+        const section = data.section || 'food';
+        const radius = data.radius || '1000';
+        const offset = data.offset || '10';
+        const venuePhotos = data.venuePhotos || '1';
+
+        fetch(`${url}&ll=${ll}&section=${section}&radius=${radius}&offset=${offset}&venuePhotos=${venuePhotos}&v=20161231`)
+            .then(response => response.json())
+            .then((json) => res.send(json))
+            .catch(e => res.send(e));
+    });
+
     app.use('/api', router);
     // app.use(express.static('./public'));
 

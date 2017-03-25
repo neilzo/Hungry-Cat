@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import '../public/core.css';
 import BgImage from '../public/bg.jpg';
+import getLocation from './utils/getLocation';
 
 // Components
 import Alert from './components/Alert';
@@ -27,20 +28,7 @@ class App extends Component {
 
     getFood = () => {
         this.setState({loading: true});
-        return new Promise((resolve, reject) => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    resolve(position);
-                }, (error) => {
-                    reject(error);
-                }, {
-                    maximumAge: 30000,
-                    timeout: 27000
-                });
-            } else {
-                reject({error: {message: 'Geolocation Unavailable'}});
-            }
-        }).then((position) => {
+        getLocation().then((position) => {
             this.setState({position: {
                 lat: position.coords.latitude,
                 long: position.coords.longitude,

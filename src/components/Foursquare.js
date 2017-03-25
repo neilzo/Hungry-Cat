@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FetchFoursquare } from '../remote';
+import { FetchFoursquare, FetchFood } from '../remote';
 
 export default class Foursquare extends Component {
     static propTypes = {
@@ -18,11 +18,13 @@ export default class Foursquare extends Component {
             long,
             query: name,
         };
-        FetchFoursquare(data).then((response) => {
-            // gonna fix this :poop:
-            const venue = response.response.venue;
-            this.setState({ venue });
-        });
+        // FetchFoursquare(data).then((response) => {
+        //     // gonna fix this :poop:
+        //     const venue = response.response.venue;
+        //     this.setState({ venue });
+        // });
+
+        FetchFood(data).then(response => console.log(response));
     }
 
     render() {
