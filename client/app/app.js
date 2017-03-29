@@ -14,13 +14,6 @@
 
   //get location on init
   (function() {
-    
-    //show hidden other background images, for slower connections
-    var carousel = document.getElementById('carousel');
-    for (var i = 0; i < carousel.children.length - 1; i++) {
-      carousel.children[i].style.display = 'block';
-    };
-
     var geoOptions = {
       timeout: 10 * 1000,
       maximumAge: 1000 * 60 * 30 //30 minutes before grabbing new location
@@ -68,7 +61,7 @@
 
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7127, lng: -73.935242}, //center on NYC
-      zoom: 15    
+      zoom: 15
     });
 
     window.directionsDisplay.setMap(map);
@@ -137,7 +130,7 @@
 
     pos.lat = data.location.coordinate.latitude;
     pos.lng = data.location.coordinate.longitude;
-    
+
     biz.pos = pos;
     bizLocation = pos;
     biz.name = data.name;
@@ -214,7 +207,7 @@
 
   function closeAlert(e) {
     document.getElementById('alerts').removeChild(e.target.parentNode);
-    
+
     return;
   }
 
@@ -245,7 +238,7 @@
 
     businessReviewCount = document.createElement('p');
     businessReviewCount.textContent = 'Review Count: ' + biz.review_count;
-    
+
     businessName = document.createElement('p');
     businessName.setAttribute('class', 'business-name');
     businessName.textContent = biz.name;
@@ -286,9 +279,9 @@
       yReviewNum,
       yReview,
       result = document.getElementById('results');
-    var businessWrap = document.createElement('div');  
+    var businessWrap = document.createElement('div');
     var biz = selectBiz(data);
-    
+
     if (!biz) {
       document.getElementById('again').setAttribute('disabled', true);
       return;
@@ -317,7 +310,7 @@
       } else {
         //noop, there is *probably* no corresponding Yelp page
         businessReviewCount = 'There appears to be no corresponding Yelp page for this restaurant :(';
-      } 
+      }
     });
 
     businessWrap.setAttribute('class', 'food-card animate');
@@ -325,7 +318,7 @@
     businessImage = document.createElement('img');
     businessImage.setAttribute('class', 'main-img main-img-sml');
     businessImage.setAttribute('src', biz.summary.merchant_logo);
-    
+
     businessName = document.createElement('p');
     businessName.setAttribute('class', 'business-name');
     businessName.textContent = biz.summary.name;
@@ -465,7 +458,7 @@
 
     for (var i = 0; i < datum.length; i++) {
       // ._.
-      if (datum === biz.categories) {   
+      if (datum === biz.categories) {
         if (datum.length === 1 || i === datum.length - 1) {
           catString += datum[i][0];
         } else {
@@ -498,7 +491,7 @@
   }
 
   //Vanilla js ajax
-  function maiAJAXGet(url) {    
+  function maiAJAXGet(url) {
     var request = new XMLHttpRequest();
     var data;
 
@@ -536,7 +529,7 @@
   }
 
   //ajax that returns the data async via callback
-  function ajaxData(url, handleData) {    
+  function ajaxData(url, handleData) {
     var request = new XMLHttpRequest();
 
     console.log('AJAX REQUEST!');
