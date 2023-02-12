@@ -1,5 +1,8 @@
-secrets.js
 node_modules
 
-public/core.css
-public/core.css.map
+/.cache
+/build
+/public/build
+.env
+
+.idea
