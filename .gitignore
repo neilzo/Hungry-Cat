@@ -1,5 +1,4 @@
-secrets.js
+.idea
 node_modules
-
-public/core.css
-public/core.css.map
+dist
+.env

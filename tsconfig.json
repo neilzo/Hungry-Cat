@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleResolution": "node16",
+    "skipLibCheck": true,
+    "strict": true,
+    "sourceMap": true,
+    "target": "ES2021",
+    "outDir": "dist"
+  },
+  "exclude": ["dist", "client"],
+  "include": ["server"],
+  "lib": ["es2015"]
+}
