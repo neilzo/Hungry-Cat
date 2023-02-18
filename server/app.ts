@@ -1,9 +1,15 @@
 import express from 'express';
 const app = express();
-const port = 9000;
+const port = process.env.PORT || 9000;
+
+// Express only serves static assets in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
 
 app.get('/', (req, res) => {
 });
+
 
 app.get('/status', (req, res) => {
   res.send('Hello World!');

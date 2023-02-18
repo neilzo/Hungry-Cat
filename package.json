@@ -5,9 +5,10 @@
   "main": "",
   "proxy": "http://localhost:9000",
   "scripts": {
-    "start": "tsc && node dist/app.js",
-    "start:watch": "tsc -w & nodemon dist/app.js",
-    "lint": "eslint . --ext .ts"
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "start:watch": "tsc && tsc -w & nodemon dist/app.js",
+    "lint": "eslint ."
   },
   "author": "Neil Daftary",
   "license": "MIT",
