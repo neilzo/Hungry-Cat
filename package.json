@@ -2,7 +2,8 @@
   "name": "hungry-cat",
   "version": "2.0.0",
   "description": "Hunt your next meal.",
-  "main": "",
+  "main": "./dist/app.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
@@ -21,6 +22,8 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.0"
   }
 }
