@@ -1,6 +1,7 @@
 {
   "name": "hungry-cat-client",
   "version": "0.1.0",
+  "proxy": "http://localhost:9000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

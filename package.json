@@ -3,7 +3,6 @@
   "version": "2.0.0",
   "description": "Hunt your next meal.",
   "main": "",
-  "proxy": "http://localhost:9000",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
