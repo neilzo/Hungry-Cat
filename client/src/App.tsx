@@ -1,6 +1,8 @@
 import React from "react";
 import "./App.css";
-import { GetLocationButton } from "./components/GetLocationButton";
+import { GetFoodButton } from "./components/GetFoodButton";
+import { metersToMiles } from "./lib/location";
+import { GetDrankButton } from "./components/GetDrankButton";
 
 interface UserLocation {
   latitude?: number;
@@ -8,9 +10,18 @@ interface UserLocation {
   permissionDenied?: boolean;
 }
 
+interface YelpResult {
+  name: string;
+  rating: number;
+  id: string;
+  review_count: number;
+  distance: number;
+  image_url: string;
+}
+
 export interface AppState {
   location: UserLocation;
-  results: any;
+  results?: YelpResult[];
   error?: string;
 }
 
@@ -26,7 +37,7 @@ const DEFAULT_STATE: AppState = {
 
 function App() {
   const [appState, setAppState] = React.useState<AppState>(DEFAULT_STATE);
-  const { error } = appState;
+  const { error, results } = appState;
 
   const updateAppState = (newState: Partial<AppState>) => {
     setAppState((prevState) => ({
@@ -45,7 +56,33 @@ function App() {
         )}
       </header>
       <main>
-        <GetLocationButton updateAppState={updateAppState} />
+        {!results && (
+          <>
+            <GetFoodButton updateAppState={updateAppState} />
+            <GetDrankButton updateAppState={updateAppState} />
+          </>
+        )}
+        {results &&
+          results.map((result) => (
+            <div key={result.id}>
+              <h2>{result.name}</h2>
+              <img
+                src={result.image_url}
+                alt={`Main image for ${result.name}`}
+                className="image"
+              />
+              <p>Rating: {result.rating}</p>
+              <p>Reviews: {result.review_count}</p>
+              <p>
+                Distance from yo ass: {Math.ceil(result.distance)} meters /{" "}
+                {metersToMiles(result.distance).toFixed(2)} miles
+              </p>
+              <div className="card-footer">
+                <button>Swipe left</button>
+                <button>I'm interested...</button>
+              </div>
+            </div>
+          ))}
       </main>
     </div>
   );

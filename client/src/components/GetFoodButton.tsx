@@ -6,7 +6,7 @@ interface GetLocationButtonProps {
   updateAppState: (newState: Partial<AppState>) => void;
 }
 
-export const GetLocationButton: React.FC<GetLocationButtonProps> = ({
+export const GetFoodButton: React.FC<GetLocationButtonProps> = ({
   updateAppState,
 }) => {
   const [loadingLocation, setLoadingLocation] = React.useState<boolean>(false);
@@ -25,6 +25,15 @@ export const GetLocationButton: React.FC<GetLocationButtonProps> = ({
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
             },
+          });
+          const resp = await fetch(
+            `/api/find-food?lat=${location.coords.latitude}&lon=${location.coords.longitude}`
+          );
+          const respJson = await resp.json();
+          updateAppState({
+            results: respJson.businesses.sort(
+              (a: any, b: any) => a.distance - b.distance
+            ),
           });
         } catch (e) {
           if (e instanceof GeolocationPositionError) {

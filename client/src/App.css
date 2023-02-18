@@ -16,3 +16,12 @@
   color: var(--error);
 }
 
+.image {
+  max-width: 100%;
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
